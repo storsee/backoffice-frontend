@@ -1,0 +1,95 @@
+<app-breadcrumb [pageName]="sharedservice.pageName" [icon]="sharedservice.pageDetail?.icon" />
+<app-page-data-count [totalCount]="totalCount" [filteredCount]="dataList.length" />
+<div class="page-top-main">
+    <div class="page-top-search-main d-flex">
+        <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchTxt" (keyup.enter)="filterData()" />
+        <button type="button" class="square-btn site-btn primary-color ms-1" [appBtnLoading]="isSearchLoading" [disabled]="isSearchLoading || isListLoading" (click)="filterData()"><i
+                class="fa-solid fa-magnifying-glass"></i></button>
+    </div>
+    @if(sharedservice.isPageInsert){
+    <div class="page-top-btns-main d-flex justify-content-end">
+        <button class="site-btn dark-color ms-1" (click)="addUpdateData(false)">
+            <div class="site-btn-icon"><i class="fa-solid fa-plus"></i></div>
+            Create
+        </button>
+    </div>
+    }
+</div>
+@if(hasEverLoaded || isListLoading || dataList.length > 0){
+<div class="boxes-content-main list-content-main" [class.is-list-loading]="isListLoading">
+    @if(dataList.length>0){
+    <div class="d-grid p-0 m-0 three-box">
+        @for(item of dataList | paginate: { itemsPerPage: limit, currentPage: page , totalItems : totalCount}; track item;let i=$index){
+        <div class="boxes-content-single-box">
+            <div class="box-banner-img" (click)="sharedservice.viewImage(item.image)"
+                [style]="'background-image: url('+item.image+')'"></div>
+            <div class="box-banner-btns-main">
+                @if(sharedservice.isPageUpdate || sharedservice.isPageDelete){
+                <div class="table-btns-main justify-content-end">
+                    <button [ngbTooltip]="'Preview URL'" (click)="sharedservice.openURL(item.url)"
+                        class="table-single-btn yellow"><i class="fa-solid fa-link"></i></button>
+                    @if(sharedservice.isPageUpdate){
+                    <button [ngbTooltip]="'Update Data'" (click)="addUpdateData(true,item)"
+                        class="table-single-btn primary ms-1"><i class="fa-solid fa-pencil"></i></button>
+                    }
+                    @if(sharedservice.isPageDelete){
+                    <button [ngbTooltip]="'Delete Data'" [appBtnLoading]="isBtnLoading('delete', item.id)" (click)="deleteData(item.id)"
+                        class="table-single-btn red ms-1"><i class="fa-solid fa-trash-can"></i></button>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+        }
+    </div>
+    <div class="main-pagination">
+        <div class="data-limit-main">
+            <select class="form-select" [(ngModel)]="limit" [disabled]="isListLoading" (ngModelChange)="onLimitChange()">
+                <option [value]="10">10</option>
+                <option [value]="30">30</option>
+                <option [value]="50">50</option>
+                <option [value]="100">100</option>
+                <option [value]="500">500</option>
+            </select>
+        </div>
+        <div class="pagination-inner">
+            <pagination-controls (pageChange)="onPageChange($event)" />
+        </div>
+    </div>
+    }@else {
+    <div class="no-data-found-main">
+        <div class="no-data-found-img">
+            <img src="../../../assets/img/no-data.png" alt="">
+        </div>
+        <div class="no-data-found-ttl">No Record Found!</div>
+        <div class="no-data-found-ctx">
+            You don't currently have any Record.
+            @if(sharedservice.isPageInsert){
+            Create a new Record by clicking the button below.
+            }
+        </div>
+        @if(sharedservice.isPageInsert){
+        <button class="site-btn primary-color" (click)="addUpdateData(false)"><span class="site-btn-icon"><i
+                    class="fa-solid fa-plus"></i></span> Create</button>
+        }
+    </div>
+    }
+</div>
+}@else {
+    <div class="no-data-found-main">
+        <div class="no-data-found-img">
+            <img src="../../../assets/img/no-data.png" alt="">
+        </div>
+        <div class="no-data-found-ttl">No Record Found!</div>
+        <div class="no-data-found-ctx">
+            You don't currently have any Record.
+            @if(sharedservice.isPageInsert){
+            Create a new Record by clicking the button below.
+            }
+        </div>
+        @if(sharedservice.isPageInsert){
+        <button class="site-btn primary-color" (click)="addUpdateData(false)"><span class="site-btn-icon"><i
+                    class="fa-solid fa-plus"></i></span> Create</button>
+        }
+    </div>
+}

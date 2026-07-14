@@ -1,0 +1,195 @@
+<main class="tpl-modal">
+  <div class="tpl-modal__shell">
+    <header class="tpl-modal__header">
+      <div class="tpl-modal__header-text">
+        <div class="tpl-modal__badge">
+          <i class="fa-solid fa-palette"></i>
+        </div>
+        <div>
+          <h2>{{ isEdit ? 'Update Template' : 'Create Template' }}</h2>
+          <p>{{ isEdit ? 'Edit theme details, pricing & store visibility' : 'Add a new theme to the template store' }}</p>
+        </div>
+      </div>
+      <button type="button" class="tpl-modal__close" (click)="activeModal.close()" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </header>
+
+    <div class="tpl-modal__body">
+      <div class="row g-3 m-0">
+        <!-- Left: preview & upload -->
+        <div class="col-lg-5">
+          <section class="tpl-card tpl-card--preview">
+            <div class="tpl-card__label">
+              <i class="fa-solid fa-image"></i> Live preview
+            </div>
+
+            <div class="tpl-live-card" [class.tpl-live-card--empty]="!dataReqModel.thumbnail">
+              @if(dataReqModel.thumbnail){
+                <img [src]="dataReqModel.thumbnail" alt="Template preview" />
+                <div class="tpl-live-card__overlay">
+                  <span class="tpl-live-card__code">{{ dataReqModel.uniqueCode || 'CODE' }}</span>
+                </div>
+              } @else {
+                <div class="tpl-live-card__placeholder">
+                  <i class="fa-light fa-image"></i>
+                  <span>Upload thumbnail to preview</span>
+                </div>
+              }
+            </div>
+
+            <div class="tpl-live-meta">
+              <div class="tpl-live-meta__name">{{ dataReqModel.name || 'Template name' }}</div>
+              <div class="tpl-live-meta__tagline">{{ dataReqModel.tagline || 'Tagline appears here' }}</div>
+              <div class="tpl-live-meta__price">
+                @if(dataReqModel.isFree){
+                  <span class="tpl-price-chip tpl-price-chip--free">Free</span>
+                } @else {
+                  <span class="tpl-price-chip">₹{{ dataReqModel.price || 0 }}</span>
+                }
+                @if(dataReqModel.isActive){
+                  <span class="tpl-status-chip">Active</span>
+                } @else {
+                  <span class="tpl-status-chip tpl-status-chip--muted">Hidden</span>
+                }
+              </div>
+            </div>
+
+            <label class="tpl-upload" [class.tpl-upload--has-file]="!!dataReqModel.thumbnail">
+              <input type="file" accept="image/png,image/jpeg,image/jpg,image/webp" (change)="uploadImage($event)" hidden />
+              <span class="tpl-upload__icon"><i class="fa-solid fa-cloud-arrow-up"></i></span>
+              <span class="tpl-upload__text">
+                <strong>{{ dataReqModel.thumbnail ? 'Replace thumbnail' : 'Upload thumbnail' }}</strong>
+                <small>PNG, JPG or WEBP · 16:9 recommended</small>
+              </span>
+            </label>
+          </section>
+        </div>
+
+        <!-- Right: form -->
+        <div class="col-lg-7">
+          @if(isSystemDefault){
+            <div class="tpl-alert">
+              <i class="fa-solid fa-lock"></i>
+              <span>System default template — unique code & pricing are locked.</span>
+            </div>
+          }
+
+          <section class="tpl-card">
+            <div class="tpl-card__head">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>Basic information</span>
+            </div>
+            <div class="row g-2">
+              <div class="col-md-6">
+                <div class="tpl-field">
+                  <label>Name <sup>*</sup></label>
+                  <input class="tpl-input" type="text" placeholder="e.g. Aurora Commerce" [(ngModel)]="dataReqModel.name" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="tpl-field">
+                  <label>Unique code <sup>*</sup></label>
+                  <input class="tpl-input tpl-input--code" type="text" placeholder="EOAT"
+                    [(ngModel)]="dataReqModel.uniqueCode" [disabled]="isSystemDefault" />
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="tpl-field">
+                  <label>Tagline</label>
+                  <input class="tpl-input" type="text" placeholder="Short pitch for the store" [(ngModel)]="dataReqModel.tagline" />
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="tpl-field">
+                  <label>Description</label>
+                  <textarea class="tpl-input tpl-input--area" rows="3" placeholder="What makes this template special?"
+                    [(ngModel)]="dataReqModel.description"></textarea>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="tpl-field">
+                  <label>Preview URL <span class="tpl-optional">optional</span></label>
+                  <input class="tpl-input" type="url" placeholder="https://demo.yourstore.com" [(ngModel)]="dataReqModel.previewUrl" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="tpl-card">
+            <div class="tpl-card__head">
+              <i class="fa-solid fa-indian-rupee-sign"></i>
+              <span>Pricing</span>
+            </div>
+            <div class="tpl-pricing-row">
+              <div class="tpl-toggle-block" [class.tpl-toggle-block--disabled]="isSystemDefault">
+                <label class="tpl-switch">
+                  <input type="checkbox" [(ngModel)]="dataReqModel.isFree" [disabled]="isSystemDefault" (change)="onFreeToggle()" />
+                  <span class="tpl-switch__track"></span>
+                </label>
+                <div class="tpl-toggle-block__text">
+                  <strong>Free template</strong>
+                  <small>Available at no cost in the template store</small>
+                </div>
+              </div>
+              <div class="tpl-field tpl-field--price" [class.tpl-field--disabled]="dataReqModel.isFree || isSystemDefault">
+                <label>Price (₹)</label>
+                <div class="tpl-input-wrap">
+                  <span class="tpl-input-prefix">₹</span>
+                  <input class="tpl-input" type="number" min="0" placeholder="0"
+                    [(ngModel)]="dataReqModel.price" [disabled]="dataReqModel.isFree || isSystemDefault" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="tpl-card">
+            <div class="tpl-card__head">
+              <i class="fa-solid fa-store"></i>
+              <span>Store listing</span>
+            </div>
+            <div class="row g-2">
+              <div class="col-md-7">
+                <div class="tpl-field">
+                  <label>Category</label>
+                  <select class="tpl-input tpl-input--select" [(ngModel)]="dataReqModel.categoryId">
+                    <option [ngValue]="null" disabled>— Select category —</option>
+                    @for(item of categoryList; track item.id){
+                      <option [ngValue]="item.id">{{ item.name }}</option>
+                    }
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="tpl-field">
+                  <label>Sort order</label>
+                  <input class="tpl-input" type="number" placeholder="0" [(ngModel)]="dataReqModel.sortOrder" />
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="tpl-toggle-block">
+                  <label class="tpl-switch">
+                    <input type="checkbox" [(ngModel)]="dataReqModel.isActive" />
+                    <span class="tpl-switch__track"></span>
+                  </label>
+                  <div class="tpl-toggle-block__text">
+                    <strong>Active in template store</strong>
+                    <small>Visible to merchants browsing themes</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <footer class="tpl-modal__footer">
+      <button type="button" class="site-btn grey-color" (click)="activeModal.close()" [disabled]="isSaving">Cancel</button>
+      <button type="button" class="site-btn primary-color ms-2" (click)="validateData()" [appBtnLoading]="isSaving" [disabled]="isSaving">
+        <span class="site-btn-icon"><i class="fa-solid fa-check"></i></span>
+        {{ isEdit ? 'Save changes' : 'Create template' }}
+      </button>
+    </footer>
+  </div>
+</main>

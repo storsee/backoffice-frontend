@@ -1,0 +1,34 @@
+<main>
+    <div class="popup-main">
+        <div class="popup-head">
+            <div class="popup-head-ttl">Update Lead Status</div>
+            <div class="popup-head-btn">
+                <button (click)="activeModal.close()"><i class="fa-solid fa-x"></i></button>
+            </div>
+        </div>
+        <div class="popup-body">
+            <div class="row m-0 p-0">
+                <div class="p-0 m-0 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" [(ngModel)]="dataReqModel.status">
+                            <option [value]="1">New</option>
+                            <option [value]="2">Contacted</option>
+                            <option [value]="3">Proposal Sent</option>
+                            <option [value]="4">Won</option>
+                            <option [value]="5">On Hold</option>
+                            <option [value]="6">Lost</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="popup-footer">
+            <button type="button" class="site-btn grey-color" (click)="activeModal.close()" [disabled]="isSaving">Close</button>
+            <button type="button" class="site-btn primary-color ms-1" (click)="validateData()" [appBtnLoading]="isSaving" [disabled]="isSaving">
+                <span class="site-btn-icon"><i class="fa-solid fa-check"></i></span>
+                Update
+            </button>
+        </div>
+    </div>
+</main>

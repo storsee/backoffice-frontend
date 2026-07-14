@@ -1,0 +1,230 @@
+<main>
+    <div class="popup-main">
+        <div class="popup-head">
+            <div class="popup-head-ttl">{{ isEdit ? 'Update' : 'Create' }} Plan</div>
+            <div class="popup-head-btn">
+                <button (click)="activeModal.close()"><i class="fa-solid fa-x"></i></button>
+            </div>
+        </div>
+        <div class="popup-body">
+            <div class="row m-0 p-0">
+
+                <div class="col-lg-4 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Tier <sup>*</sup></label>
+                        <select class="form-select" [(ngModel)]="dataReqModel.tierSlug" (ngModelChange)="syncSlugFromTierCycle()" [disabled]="isEdit">
+                            <option value="starter">Starter</option>
+                            <option value="growth">Growth</option>
+                            <option value="scale">Scale</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Billing period <sup>*</sup></label>
+                        <select class="form-select" [(ngModel)]="dataReqModel.billingCycle" (ngModelChange)="onBillingCycleChange()" [disabled]="isEdit">
+                            <option value="monthly">1 Month</option>
+                            <option value="semiannual">6 Months</option>
+                            <option value="annual">1 Year</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Plan Slug <sup>*</sup></label>
+                        <input class="form-control" type="text" [(ngModel)]="dataReqModel.slug" [readonly]="true" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Plan Name <sup>*</sup></label>
+                        <input class="form-control" type="text" placeholder="Starter, Growth, Scale" [(ngModel)]="dataReqModel.name" (blur)="autoSlug()" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Tagline</label>
+                        <input class="form-control" type="text" [(ngModel)]="dataReqModel.tagline" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Display order</label>
+                        <input class="form-control" type="number" OnlyNumber [(ngModel)]="dataReqModel.sortOrder" />
+                    </div>
+                </div>
+                <div class="col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" rows="2" [(ngModel)]="dataReqModel.description"></textarea>
+                    </div>
+                </div>
+
+                <!-- Price -->
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Price (₹) <sup>*</sup></label>
+                        <input class="form-control" type="number" OnlyNumber placeholder="0 for Free" [(ngModel)]="dataReqModel.amount" />
+                    </div>
+                </div>
+
+                <!-- Duration -->
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Duration (Days) <sup>*</sup></label>
+                        <input class="form-control" type="number" OnlyNumber placeholder="30, 180, 365" [(ngModel)]="dataReqModel.duration" readonly />
+                        <small class="text-muted">Auto-set from billing period. Templates are not included in plans.</small>
+                    </div>
+                </div>
+
+                <!-- Trial Days -->
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">
+                            Trial Days
+                            <span class="ms-1 cursor-pointer" [ngbTooltip]="'Free trial days before billing starts. Enter 0 to disable.'">
+                                <i class="fa-solid fa-circle-info"></i>
+                            </span>
+                        </label>
+                        <input class="form-control" type="number" OnlyNumber placeholder="0 = No Trial" [(ngModel)]="dataReqModel.trialDays" />
+                    </div>
+                </div>
+
+                <!-- Product Limit -->
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">
+                            Product Limit <sup>*</sup>
+                            <span class="ms-1 cursor-pointer" [ngbTooltip]="'Enter 0 for Unlimited'">
+                                <i class="fa-solid fa-circle-info"></i>
+                            </span>
+                        </label>
+                        <input class="form-control" type="number" OnlyNumber placeholder="0 = Unlimited" [(ngModel)]="dataReqModel.productLimit" />
+                    </div>
+                </div>
+
+                <!-- Max Orders -->
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">
+                            Max Orders / Month
+                            <span class="ms-1 cursor-pointer" [ngbTooltip]="'Enter 0 for Unlimited'">
+                                <i class="fa-solid fa-circle-info"></i>
+                            </span>
+                        </label>
+                        <input class="form-control" type="number" OnlyNumber placeholder="0 = Unlimited" [(ngModel)]="dataReqModel.maxOrders" />
+                    </div>
+                </div>
+
+                <!-- Color -->
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Plan Color</label>
+                        <div class="color-picker-row">
+                            <input type="color" class="color-input" [(ngModel)]="dataReqModel.color" />
+                            <input class="form-control ms-2" type="text" placeholder="#1d68f1" [(ngModel)]="dataReqModel.color" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toggles -->
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Flags</label>
+                        <div class="toggle-flags-row">
+                            <div class="toggle-flag-item">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" class="toggle-input" [(ngModel)]="dataReqModel.isPopular" />
+                                    <span class="toggle-label"></span>
+                                </label>
+                                <span class="toggle-flag-label">
+                                    <i class="fa-solid fa-star me-1 text-yellow"></i> Mark as Popular
+                                </span>
+                            </div>
+                            <div class="toggle-flag-item mt-2">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" class="toggle-input" [(ngModel)]="dataReqModel.isRecommended" />
+                                    <span class="toggle-label"></span>
+                                </label>
+                                <span class="toggle-flag-label">
+                                    <i class="fa-solid fa-thumbs-up me-1 text-primary"></i> Mark as Recommended
+                                </span>
+                            </div>
+                            <div class="toggle-flag-item mt-2">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" class="toggle-input" [(ngModel)]="dataReqModel.isActive" />
+                                    <span class="toggle-label"></span>
+                                </label>
+                                <span class="toggle-flag-label">Active (visible to users)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Benefits -->
+                <div class="col-12 mt-1">
+                    <label class="form-label">Benefits <sup>*</sup></label>
+                    <div class="benefits-main">
+                        @for(item of benefits; track item; let i = $index){
+                            <div class="single-benefit">
+                                <span class="benefit-index">{{ i + 1 }}</span>
+                                <input type="text" class="form-control" placeholder="Enter benefit text" [(ngModel)]="item.text" />
+                                @if(benefits.length > 1){
+                                    <button class="site-btn square-btn red-color ms-1" (click)="deleteBenefit(i)">
+                                        <span><i class="fa-solid fa-trash-can"></i></span>
+                                    </button>
+                                }
+                                <button class="site-btn square-btn primary-color ms-1" (click)="benefits.push({ text: '' })">
+                                    <span><i class="fa-solid fa-plus"></i></span>
+                                </button>
+                            </div>
+                        }
+                        @if(benefits.length === 0){
+                            <button class="site-btn grey-color" (click)="benefits.push({ text: '' })">
+                                <span class="site-btn-icon"><i class="fa-solid fa-plus"></i></span> Add Benefit
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <!-- Live Preview -->
+                <div class="col-12 mt-3">
+                    <label class="form-label">Live Preview</label>
+                    <div class="plan-preview" [style.--preview-color]="dataReqModel.color || '#1d68f1'">
+                        <div class="preview-accent"></div>
+                        <div class="preview-badges">
+                            @if(dataReqModel.isRecommended){
+                                <span class="badge-recommended"><i class="fa-solid fa-thumbs-up me-1"></i>Recommended</span>
+                            }
+                            @if(dataReqModel.isPopular){
+                                <span class="badge-popular"><i class="fa-solid fa-star me-1"></i>Popular</span>
+                            }
+                            <span class="badge-status active">Active</span>
+                        </div>
+                        <div class="preview-name">{{ dataReqModel.name || 'Plan Name' }}</div>
+                        <div class="preview-price">
+                            <span class="preview-symbol">₹</span>
+                            <span class="preview-amount">{{ dataReqModel.amount || 0 }}</span>
+                            <span class="preview-dur">/ {{ dataReqModel.duration || 0 }} Days</span>
+                        </div>
+                        <div class="preview-limits">
+                            <span><i class="fa-solid fa-box me-1"></i>{{ dataReqModel.productLimit == 0 ? 'Unlimited' : dataReqModel.productLimit }} Products</span>
+                            <span><i class="fa-solid fa-cart-shopping me-1"></i>{{ dataReqModel.maxOrders == 0 ? 'Unlimited' : dataReqModel.maxOrders }} Orders</span>
+                            @if(dataReqModel.trialDays > 0){
+                                <span><i class="fa-solid fa-clock me-1"></i>{{ dataReqModel.trialDays }} Day Trial</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="popup-footer">
+            <button type="button" class="site-btn grey-color" (click)="activeModal.close()" [disabled]="isSaving">Close</button>
+            <button type="button" class="site-btn primary-color ms-1" (click)="validateData()" [appBtnLoading]="isSaving" [disabled]="isSaving">
+                <span class="site-btn-icon"><i class="fa-solid fa-check"></i></span>
+                {{ isEdit ? 'Update Plan' : 'Create Plan' }}
+            </button>
+        </div>
+    </div>
+</main>

@@ -1,0 +1,21 @@
+input[type="checkbox"]{
+    width: 14px !important;
+    height: 14px !important;
+}
+input[type="checkbox"]:checked {
+    background-color: var(--secondary) !important;
+    border: 1px solid var(--secondary) !important;
+}
+td{
+    border-bottom: 1px solid var(--light-border) !important;
+}
+.cat-td{
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--black);
+    background-color: var(--dark-border) !important;
+    margin-top: 10px !important;
+    border-radius: 0 0 10px 10px;
+    border: none !important;
+}

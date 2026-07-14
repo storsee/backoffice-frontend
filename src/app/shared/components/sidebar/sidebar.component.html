@@ -1,0 +1,32 @@
+<div class="sidebar">
+    <div class="sidebar-store-main">
+        <div class="sidebar-store-icon">
+            <i class="fa-light fa-user-secret"></i>
+        </div>
+        <div class="sidebar-store-info">
+            <div class="sidebar-store-name">{{sharedservice.userData?.name}}</div>
+            <div class="sidebar-store-cat">{{sharedservice.userData?.email}}</div>
+        </div>
+    </div>
+    <div class="sidebar-menus-main">
+        <ul>
+            @for(item of sharedservice.sidebarPages; track item){
+                @if(item.pages.length>0){
+                    <li class="page-cat-name">{{item.category}}</li>
+                    @for(page of item.pages; track page){
+                        <li class="sidebar-menu-single" [routerLink]="page.url" routerLinkActive="selected" (click)="sharedservice.isSidebarOpen = false">
+                            <div class="sidebar-menu-icon"><i [class]="'fa-solid fa-'+page.icon"></i></div>
+                            <div class="sidebar-menu-name">{{page.pagename}}</div>
+                        </li>
+                    }
+                }
+            }
+        </ul>
+    </div>
+    <div class="sidebar-logout-main">
+        <button class="sidebar-logout-btn" (click)="logout()">
+            <div class="sidebar-logout-btn-icon"><i class="fa-solid fa-right-from-bracket"></i></div>
+            <div class="sidebar-logout-btn-name">Logout</div>
+        </button>
+    </div>
+</div>

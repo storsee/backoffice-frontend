@@ -1,0 +1,18 @@
+.box-banner-img{
+    height: 150px;
+    background-position: center center;
+    background-size: cover;
+    cursor: pointer;
+    background-color: var(--sidebar-bg);
+    margin-bottom: 7px;
+    border-radius: 10px;
+}
+.main-pagination{
+    padding: 0 !important;
+}
+
+.list-content-main.is-list-loading {
+  opacity: 0.72;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}

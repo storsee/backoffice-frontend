@@ -1,0 +1,38 @@
+<main>
+    <div class="popup-main">
+        <div class="popup-head">
+            <div class="popup-head-ttl">{{singleData?.name}} - Template's Details</div>
+            <div class="popup-head-btn">
+                <button (click)="activeModal.close()"><i class="fa-solid fa-x"></i></button>
+            </div>
+        </div>
+        <div class="popup-body">
+            <div class="row m-0 p-0">
+                <div class="col-12 mb-2">
+                    <div class="uploaded-img-main">
+                        @if(singleData?.thumbnail){
+                            <img [src]="singleData?.thumbnail" alt="thumbnail" class="uploaded-img" />
+                        }
+                    </div>
+                </div>
+                @if(singleData){
+                    <div class="col-12 mb-2">
+                        <div class="form-inp-main">
+                            <label class="form-label">Name</label>
+                                <input class="form-control" type="text" [disabled]="true" placeholder="Enter Name" [(ngModel)]="singleData.name" />
+                        </div>
+                    </div>
+                    <div class="col-12 mb-2">
+                        <div class="form-inp-main">
+                            <label class="form-label">Category</label>
+                                <input class="form-control" type="text" [disabled]="true" placeholder="Enter Category" [(ngModel)]="singleData.categoryName" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="popup-footer">
+            <button type="button" class="site-btn grey-color" (click)="activeModal.close()">Close</button>
+        </div>
+    </div>
+</main>

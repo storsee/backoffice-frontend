@@ -1,0 +1,56 @@
+<main>
+    <div class="popup-main">
+        <div class="popup-head">
+            <div class="popup-head-ttl">{{isEdit ? 'Update' : 'Create'}} Page</div>
+            <div class="popup-head-btn">
+                <button (click)="activeModal.close()"><i class="fa-solid fa-x"></i></button>
+            </div>
+        </div>
+        <div class="popup-body">
+            <div class="row m-0 p-0">
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Page Name</label>
+                            <input class="form-control" type="text" placeholder="Enter Page Name" [(ngModel)]="dataReqModel.pagename" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Redirection URL</label>
+                            <input class="form-control" type="text" placeholder="Enter Redirection URL" [(ngModel)]="dataReqModel.url" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Icon</label>
+                            <input class="form-control" type="text" placeholder="Enter Icon" [(ngModel)]="dataReqModel.icon" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Display Order</label>
+                            <input class="form-control" type="number" OnlyNumber  placeholder="Enter Display Order" [(ngModel)]="dataReqModel.displayorder" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Page Category <sup>*</sup></label>
+                        <select class="form-select" [(ngModel)]="dataReqModel.categoryId">
+                            <option [disabled]="true" [value]="null">--- Select Page Category ---</option>
+                            @for(item of pageCategories; track item){
+                                <option [value]="item.id">{{item.name}}</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="popup-footer">
+            <button type="button" class="site-btn grey-color" (click)="activeModal.close()" [disabled]="isSaving">Close</button>
+            <button type="button" class="site-btn primary-color ms-1" (click)="validateData()" [appBtnLoading]="isSaving" [disabled]="isSaving">
+                <span class="site-btn-icon"><i class="fa-solid fa-check"></i></span>
+                {{isEdit ? 'Update' : 'Create'}}
+            </button>
+        </div>
+    </div>
+</main>

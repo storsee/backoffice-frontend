@@ -1,0 +1,250 @@
+<main>
+  <div class="popup-main store-settings-popup">
+    <div class="popup-head">
+      <div class="popup-head-ttl">
+        <i class="fa-solid fa-shield-halved me-2"></i>
+        Store Settings
+      </div>
+      <div class="popup-head-btn">
+        <button (click)="activeModal.close()"><i class="fa-solid fa-x"></i></button>
+      </div>
+    </div>
+
+    <div class="popup-body">
+      <!-- Store summary -->
+      <div class="ss-store-card">
+        <div class="ss-store-card__icon">
+          <i class="fa-solid fa-store"></i>
+        </div>
+        <div class="ss-store-card__body">
+          <div class="ss-store-card__name">{{ store?.name }}</div>
+          <div class="ss-store-card__meta">
+            <span><i class="fa-solid fa-link"></i> {{ store?.slug }}</span>
+            <span><i class="fa-solid fa-envelope"></i> {{ store?.email }}</span>
+            <span><i class="fa-solid fa-phone"></i> +91 {{ store?.phone }}</span>
+          </div>
+        </div>
+        <div class="ss-store-card__limits">
+          <span class="ss-chip">
+            <i class="fa-solid fa-box"></i>
+            Products: {{ limitLabel(store?.productLimit) }}
+          </span>
+          <span class="ss-chip">
+            <i class="fa-solid fa-cart-shopping"></i>
+            Orders/mo: {{ limitLabel(store?.maxOrders) }}
+          </span>
+        </div>
+      </div>
+
+      <div class="ss-info-banner">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>Plans include unlimited products &amp; orders. Restrict individual stores from here — lock, blacklist, or set custom caps.</span>
+      </div>
+
+      <!-- Security switches -->
+      <div class="ss-block">
+        <div class="ss-block__head">
+          <i class="fa-solid fa-user-shield"></i>
+          <span>Security controls</span>
+        </div>
+        <div class="ss-security-grid">
+          <div class="ss-security-card" [class.ss-security-card--on]="fullAccess">
+            <div class="ss-security-card__top">
+              <div class="ss-security-card__icon ss-security-card__icon--green">
+                <i class="fa-solid fa-unlock-keyhole"></i>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" class="toggle-input" [(ngModel)]="fullAccess" (ngModelChange)="onFullAccessChange($event)" />
+                <span class="toggle-label"></span>
+              </label>
+            </div>
+            <div class="ss-security-card__title">Restore full access</div>
+            <div class="ss-security-card__desc">Unlock store, remove blacklist, enable all features</div>
+          </div>
+
+          <div class="ss-security-card" [class.ss-security-card--warn]="isLocked">
+            <div class="ss-security-card__top">
+              <div class="ss-security-card__icon ss-security-card__icon--amber">
+                <i class="fa-solid fa-lock"></i>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" class="toggle-input" [(ngModel)]="isLocked" (ngModelChange)="onLockChange($event)" />
+                <span class="toggle-label"></span>
+              </label>
+            </div>
+            <div class="ss-security-card__title">Lock store</div>
+            <div class="ss-security-card__desc">Block storefront &amp; dashboard login</div>
+          </div>
+
+          <div class="ss-security-card" [class.ss-security-card--danger]="isBlacklisted">
+            <div class="ss-security-card__top">
+              <div class="ss-security-card__icon ss-security-card__icon--red">
+                <i class="fa-solid fa-ban"></i>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" class="toggle-input" [(ngModel)]="isBlacklisted" (ngModelChange)="onBlacklistChange($event)" />
+                <span class="toggle-label"></span>
+              </label>
+            </div>
+            <div class="ss-security-card__title">Blacklist store</div>
+            <div class="ss-security-card__desc">Full ban — all access &amp; features disabled</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature controls -->
+      <div class="ss-block">
+        <div class="ss-block__head">
+          <i class="fa-solid fa-sliders"></i>
+          <span>Feature controls</span>
+        </div>
+        <div class="ss-toggle-grid">
+          <div class="ss-toggle-row">
+            <div class="ss-toggle-row__info">
+              <i class="fa-solid fa-circle-check ss-toggle-row__icon ss-toggle-row__icon--green"></i>
+              <div>
+                <div class="ss-toggle-row__label">Store active</div>
+                <div class="ss-toggle-row__hint">Store visible on platform</div>
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" class="toggle-input" [(ngModel)]="isActive" (ngModelChange)="onFeatureChange()" />
+              <span class="toggle-label"></span>
+            </label>
+          </div>
+
+          <div class="ss-toggle-row">
+            <div class="ss-toggle-row__info">
+              <i class="fa-solid fa-shop ss-toggle-row__icon"></i>
+              <div>
+                <div class="ss-toggle-row__label">Allow storefront</div>
+                <div class="ss-toggle-row__hint">Customer can open the shop</div>
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" class="toggle-input" [(ngModel)]="allowStorefront" (ngModelChange)="onFeatureChange()" [disabled]="isBlacklisted || isLocked" />
+              <span class="toggle-label"></span>
+            </label>
+          </div>
+
+          <div class="ss-toggle-row">
+            <div class="ss-toggle-row__info">
+              <i class="fa-solid fa-gauge-high ss-toggle-row__icon"></i>
+              <div>
+                <div class="ss-toggle-row__label">Allow dashboard</div>
+                <div class="ss-toggle-row__hint">Store owner can sign in</div>
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" class="toggle-input" [(ngModel)]="allowDashboard" (ngModelChange)="onFeatureChange()" [disabled]="isBlacklisted || isLocked" />
+              <span class="toggle-label"></span>
+            </label>
+          </div>
+
+          <div class="ss-toggle-row">
+            <div class="ss-toggle-row__info">
+              <i class="fa-solid fa-bag-shopping ss-toggle-row__icon"></i>
+              <div>
+                <div class="ss-toggle-row__label">Allow checkout</div>
+                <div class="ss-toggle-row__hint">Customers can place orders</div>
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" class="toggle-input" [(ngModel)]="allowCheckout" (ngModelChange)="onFeatureChange()" [disabled]="isBlacklisted" />
+              <span class="toggle-label"></span>
+            </label>
+          </div>
+
+          <div class="ss-toggle-row">
+            <div class="ss-toggle-row__info">
+              <i class="fa-solid fa-box-open ss-toggle-row__icon"></i>
+              <div>
+                <div class="ss-toggle-row__label">Allow add products</div>
+                <div class="ss-toggle-row__hint">Store can add new products</div>
+              </div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" class="toggle-input" [(ngModel)]="allowProductAdd" (ngModelChange)="onFeatureChange()" [disabled]="isBlacklisted" />
+              <span class="toggle-label"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Limits override -->
+      <div class="ss-block">
+        <div class="ss-block__head">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Admin limits override</span>
+        </div>
+        <div class="ss-limits-grid">
+          <div class="ss-limit-card">
+            <div class="ss-limit-card__head">
+              <div class="ss-limit-card__title">
+                <i class="fa-solid fa-box"></i> Product limit
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" class="toggle-input" [(ngModel)]="useCustomProductLimit" />
+                <span class="toggle-label"></span>
+              </label>
+            </div>
+            @if(useCustomProductLimit){
+              <input class="form-control" type="number" OnlyNumber min="1" [(ngModel)]="productLimit" placeholder="e.g. 150" />
+              <div class="ss-limit-card__hint">Store can add up to {{ productLimit }} products</div>
+            } @else {
+              <div class="ss-limit-unlimited">
+                <i class="fa-solid fa-infinity"></i> Unlimited products
+              </div>
+            }
+          </div>
+
+          <div class="ss-limit-card">
+            <div class="ss-limit-card__head">
+              <div class="ss-limit-card__title">
+                <i class="fa-solid fa-cart-shopping"></i> Order limit / month
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" class="toggle-input" [(ngModel)]="useCustomOrderLimit" />
+                <span class="toggle-label"></span>
+              </label>
+            </div>
+            @if(useCustomOrderLimit){
+              <input class="form-control" type="number" OnlyNumber min="1" [(ngModel)]="maxOrders" placeholder="e.g. 100" />
+              <div class="ss-limit-card__hint">Max {{ maxOrders }} orders per month</div>
+            } @else {
+              <div class="ss-limit-unlimited">
+                <i class="fa-solid fa-infinity"></i> Unlimited orders
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="ss-block ss-block--last">
+        <div class="ss-block__head">
+          <i class="fa-solid fa-note-sticky"></i>
+          <span>Notes</span>
+        </div>
+        <div class="row m-0">
+          <div class="col-md-6 col-12 mb-2">
+            <label class="form-label">Reason (shown to store owner)</label>
+            <textarea class="form-control" rows="3" [(ngModel)]="lockReason" placeholder="Why is this store restricted?"></textarea>
+          </div>
+          <div class="col-md-6 col-12 mb-2">
+            <label class="form-label">Internal admin notes</label>
+            <textarea class="form-control" rows="3" [(ngModel)]="adminNotes" placeholder="Private notes — not visible to store"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="popup-footer">
+      <button type="button" class="site-btn grey-color" (click)="activeModal.close()" [disabled]="isSaving">Cancel</button>
+      <button type="button" class="site-btn primary-color ms-1" (click)="saveSettings()" [appBtnLoading]="isSaving" [disabled]="isSaving">
+        <span class="site-btn-icon"><i class="fa-solid fa-check"></i></span>
+        Save settings
+      </button>
+    </div>
+  </div>
+</main>

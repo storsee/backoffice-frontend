@@ -1,0 +1,87 @@
+<main>
+    <div class="popup-main">
+        <div class="popup-head">
+            <div class="popup-head-ttl">{{isEdit ? 'Update' : 'Create'}} Lead</div>
+            <div class="popup-head-btn">
+                <button (click)="activeModal.close()"><i class="fa-solid fa-x"></i></button>
+            </div>
+        </div>
+        <div class="popup-body">
+            <div class="row m-0 p-0">
+                <div class="col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Name</label>
+                            <input class="form-control" type="text" placeholder="Enter name" [(ngModel)]="dataReqModel.name" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" [(ngModel)]="dataReqModel.status">
+                            <option [value]="1">New</option>
+                            <option [value]="2">Contacted</option>
+                            <option [value]="3">Proposal Sent</option>
+                            <option [value]="4">Won</option>
+                            <option [value]="5">On Hold</option>
+                            <option [value]="6">Lost</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Lead Source</label>
+                        <select class="form-select" [(ngModel)]="dataReqModel.source">
+                            <option [value]="1">Cold Calling / Telemarketing</option>
+                            <option [value]="2">Direct</option>
+                            <option [value]="3">Email Marketing</option>
+                            <option [value]="4">Expo / Seminar</option>
+                            <option [value]="5">Google</option>
+                            <option [value]="6">Other</option>
+                            <option [value]="7">Reference</option>
+                            <option [value]="8">Social Media</option>
+                            <option [value]="9">Website</option>
+                            <option [value]="10">Digital Marketing</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Mobile</label>
+                            <input class="form-control" type="number" OnlyNumber placeholder="Enter Mobile" [(ngModel)]="dataReqModel.mobile" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Date</label>
+                            <input class="form-control" type="date" placeholder="Select Date" [(ngModel)]="dataReqModel.date" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">City</label>
+                            <input class="form-control" type="text" placeholder="Enter City" [(ngModel)]="dataReqModel.city" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Country</label>
+                            <input class="form-control" type="text" placeholder="Enter Country" [disabled]="true" [(ngModel)]="dataReqModel.country" />
+                    </div>
+                </div>
+                <div class="col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Notes</label>
+                            <textarea class="form-control" placeholder="Enter Notes" [(ngModel)]="dataReqModel.notes"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="popup-footer">
+            <button type="button" class="site-btn grey-color" (click)="activeModal.close()" [disabled]="isSaving">Close</button>
+            <button type="button" class="site-btn primary-color ms-1" (click)="validateData()" [appBtnLoading]="isSaving" [disabled]="isSaving">
+                <span class="site-btn-icon"><i class="fa-solid fa-check"></i></span>
+                {{isEdit ? 'Update' : 'Create'}}
+            </button>
+        </div>
+    </div>
+</main>

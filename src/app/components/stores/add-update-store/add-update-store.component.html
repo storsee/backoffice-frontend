@@ -1,0 +1,151 @@
+<main>
+    <div class="popup-main">
+        <div class="popup-head">
+            <div class="popup-head-ttl">{{isEdit ? 'Update' : 'Create'}} Store</div>
+            <div class="popup-head-btn">
+                <button (click)="activeModal.close()"><i class="fa-solid fa-x"></i></button>
+            </div>
+        </div>
+        <div class="popup-body">
+            <div class="row m-0 p-0">
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Name</label>
+                            <input class="form-control" type="text" placeholder="Enter Name" [(ngModel)]="dataReqModel.name" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Email</label>
+                            <input class="form-control" type="text" placeholder="Enter Email" [(ngModel)]="dataReqModel.email" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Phone</label>
+                        <div class="phone-field">
+                            <select class="form-select phone-field__code" [(ngModel)]="dataReqModel.countryCode">
+                                @for(c of countryCodes; track c.dial){
+                                    <option [value]="c.dial">{{ c.flag }} +{{ c.dial }} {{ c.name }}</option>
+                                }
+                            </select>
+                            <input class="form-control phone-field__input" type="text" OnlyNumber
+                                [placeholder]="dataReqModel.countryCode === '91' ? '10-digit mobile' : 'Mobile number'"
+                                [(ngModel)]="dataReqModel.phone" [maxlength]="phoneMaxLen" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Slug <small class="text-muted">(store URL, min 4 chars)</small></label>
+                            <input class="form-control" type="text" placeholder="my-store-name" [(ngModel)]="dataReqModel.slug" (blur)="normalizeSlug()" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Business Type</label>
+                            <select class="form-select" [(ngModel)]="dataReqModel.type">
+                                <option [value]="null" [disabled]="true">-- Select Business Type --</option>
+                                <option [value]="1">B2C (Business to Customer)</option>
+                                <option [value]="2">B2B (Business to Business)</option>
+                                <option [value]="3">B2C & B2B</option>
+                            </select>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Template</label>
+                            <select class="form-select" [(ngModel)]="dataReqModel.selectedTemplate">
+                                <option [value]="null" [disabled]="true">-- Select Template --</option>
+                                @for(item of templateList; track item){
+                                    <option [value]="item.uniqueCode">{{item.name}}</option>
+                                }
+                            </select>
+                    </div>
+                </div>
+
+                @if(!isEdit){
+                    <div class="col-12 mb-2">
+                        <div class="form-inp-main">
+                            <label class="form-label">Package (limits snapshotted to this store)</label>
+                            <select class="form-select" [(ngModel)]="selectedPackage" (ngModelChange)="onPackageChange()">
+                                <option [ngValue]="null" disabled>-- Select Package --</option>
+                                @for(item of packageList; track item.id){
+                                    <option [ngValue]="item">{{item.name}} — {{item.billingLabel || (item.duration + ' days')}} — ₹{{item.amount}}</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                }
+
+                <div class="col-12 mb-2">
+                    <div class="store-limits-panel">
+                        <div class="store-limits-panel__head">
+                            <div>
+                                <div class="store-limits-panel__title">Store limits</div>
+                                <div class="store-limits-panel__note">Saved on this store only. Package edits later won't change these.</div>
+                            </div>
+                            @if(!isEdit){
+                                <label class="store-limits-panel__toggle">
+                                    <input type="checkbox" [(ngModel)]="useCustomLimits" (ngModelChange)="onPackageChange()" />
+                                    <span>Custom limits</span>
+                                </label>
+                            }
+                        </div>
+                        <div class="row m-0 p-0">
+                            <div class="col-md-6 col-12 mb-2">
+                                <label class="form-label">Product limit <small class="text-muted">(0 = unlimited)</small></label>
+                                <input class="form-control" type="number" OnlyNumber min="0"
+                                    [(ngModel)]="dataReqModel.productLimit" [readonly]="!isEdit && !useCustomLimits" />
+                            </div>
+                            <div class="col-md-6 col-12 mb-2">
+                                <label class="form-label">Max orders / month <small class="text-muted">(0 = unlimited)</small></label>
+                                <input class="form-control" type="number" OnlyNumber min="0"
+                                    [(ngModel)]="dataReqModel.maxOrders" [readonly]="!isEdit && !useCustomLimits" />
+                            </div>
+                        </div>
+                        @if(selectedPackage && !isEdit){
+                            <div class="store-limits-panel__pkg-ref">
+                                Package defaults: {{limitLabel(selectedPackage.productLimit)}} products,
+                                {{limitLabel(selectedPackage.maxOrders)}} orders/mo
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                @if(!isEdit){
+                    <div class="col-12 mb-2">
+                        <div class="store-login-panel">
+                            <label class="store-login-panel__toggle">
+                                <input type="checkbox" [(ngModel)]="dataReqModel.createStoreLogin" />
+                                <span>Create dashboard login for store owner</span>
+                            </label>
+                            <div class="store-login-panel__note">Uses store email &amp; phone. Owner can sign in on the Dashboard panel.</div>
+                            @if(dataReqModel.createStoreLogin){
+                                <div class="row m-0 p-0 mt-2">
+                                    <div class="col-md-6 col-12 mb-2">
+                                        <label class="form-label">Admin name</label>
+                                        <input class="form-control" type="text" placeholder="Defaults to store name"
+                                            [(ngModel)]="dataReqModel.adminName" />
+                                    </div>
+                                    <div class="col-md-6 col-12 mb-2">
+                                        <label class="form-label">Dashboard password</label>
+                                        <input class="form-control" type="password" placeholder="Login password"
+                                            [(ngModel)]="dataReqModel.adminPassword" />
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="popup-footer">
+            <button type="button" class="site-btn grey-color" (click)="activeModal.close()" [disabled]="isSaving">Close</button>
+            <button type="button" class="site-btn primary-color ms-1" (click)="validateData()" [appBtnLoading]="isSaving" [disabled]="isSaving">
+                <span class="site-btn-icon"><i class="fa-solid fa-check"></i></span>
+                {{isEdit ? 'Update' : 'Create'}}
+            </button>
+        </div>
+    </div>
+</main>

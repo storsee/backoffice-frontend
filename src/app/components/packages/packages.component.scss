@@ -1,0 +1,220 @@
+.plans-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+@media (max-width: 992px) {
+    .plans-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+    .plans-grid { grid-template-columns: 1fr; }
+}
+
+.plan-card {
+    background: var(--white);
+    border: 1px solid var(--light-border);
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    transition: box-shadow 0.2s, transform 0.2s;
+
+    &:hover {
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        transform: translateY(-2px);
+    }
+}
+
+.plan-card-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: var(--plan-color, #1d68f1);
+    border-radius: 14px 14px 0 0;
+}
+
+.plan-badges {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.badge-recommended {
+    background: linear-gradient(135deg, #ede9fe, #dbeafe);
+    color: #4f46e5;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid #c7d2fe;
+}
+
+.badge-popular {
+    background-color: #fff8e1;
+    color: #f59e0b;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+    border: 1px solid #fde68a;
+}
+
+.badge-status {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 999px;
+
+    &.active {
+        background-color: var(--green-bg);
+        color: var(--green-color);
+    }
+    &.inactive {
+        background-color: var(--red-bg);
+        color: var(--red-color);
+    }
+}
+
+.plan-slug {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--light-font);
+}
+
+.plan-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--heading-font);
+}
+
+.plan-tagline {
+    font-size: 12px;
+    color: var(--normal-font);
+    line-height: 1.35;
+}
+
+.plan-price {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+
+    .price-symbol {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--plan-color, #1d68f1);
+    }
+    .price-amount {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--plan-color, #1d68f1);
+        line-height: 1;
+    }
+    .price-duration {
+        font-size: 12px;
+        color: var(--normal-font);
+        margin-left: 4px;
+    }
+}
+
+.plan-limits {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+    background-color: var(--sidebar-bg);
+    border-radius: 10px;
+}
+
+.limit-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: var(--normal-font);
+
+    i {
+        width: 14px;
+        color: var(--plan-color, #1d68f1);
+        font-size: 11px;
+    }
+
+    &.trial i {
+        color: var(--green-color);
+    }
+}
+
+.plan-benefits-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--normal-font);
+
+    i {
+        color: var(--green-color);
+        font-size: 10px;
+        margin-top: 2px;
+        flex-shrink: 0;
+    }
+}
+
+.benefit-more {
+    font-size: 11px;
+    color: var(--secondary);
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 2px;
+
+    &:hover { text-decoration: underline; }
+}
+
+.plan-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-top: 10px;
+    border-top: 1px solid var(--light-border);
+    margin-top: auto;
+}
+
+.plan-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    width: 28px;
+    font-size: 11px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: var(--sidebar-bg);
+    color: var(--normal-font);
+    transition: all 0.15s;
+
+    &.view:hover { background-color: var(--green-color); color: #fff; }
+    &.edit:hover { background-color: var(--secondary); color: #fff; }
+    &.delete:hover { background-color: var(--red-color); color: #fff; }
+}
+
+.list-content-main.is-list-loading {
+  opacity: 0.72;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}

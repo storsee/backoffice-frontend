@@ -1,0 +1,13 @@
+<header>
+    <div class="header-logo">
+        @if(sharedservice.deviceWidth < 992){
+            <div class="header-menu-icon" (click)="sharedservice.isSidebarOpen = !sharedservice.isSidebarOpen"><i class="fa-light fa-grid-2"></i></div>
+        }
+        <img routerLink="/dashboard" [src]="sharedservice.getSiteLogoDark()" alt="logo-white" />
+    </div>
+    <div class="header-right">
+        <div class="header-user-main">
+            <div class="header-user-icon"><i class="fa-light fa-user"></i></div>
+        </div>
+    </div>
+</header>

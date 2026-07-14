@@ -1,0 +1,50 @@
+.page-table-main.is-list-loading {
+  .table-responsive {
+    opacity: 0.72;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+  }
+}
+
+.plan-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 130px;
+}
+
+.plan-cell__date {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.25;
+}
+
+.plan-cell__day {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #0f172a;
+  white-space: nowrap;
+}
+
+.plan-cell__time {
+  font-size: 0.78rem;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.plan-badge-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.page-table-main.is-list-loading {
+  .table-responsive {
+    opacity: 0.72;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+  }
+}

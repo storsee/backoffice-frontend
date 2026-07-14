@@ -1,0 +1,58 @@
+<main>
+  <div class="popup-main">
+    <div class="popup-head">
+      <div class="popup-head-ttl">Plan History - {{store?.name}}</div>
+      <div class="popup-head-btn">
+        <button (click)="activeModal.close()"><i class="fa-solid fa-x"></i></button>
+      </div>
+    </div>
+    <div class="popup-body">
+      <div *ngIf="isLoading" class="text-center py-3">Loading...</div>
+      <div *ngIf="isError" class="text-center py-3 text-danger">Failed to load plan history.</div>
+
+      <div *ngIf="!isLoading && !isError">
+        <div class="table-responsive">
+          <table class="table table-bordered text-nowrap mb-0">
+            <thead>
+              <tr>
+                <th class="sr-th">Sr No.</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Plan</th>
+                <th>Status</th>
+                <th>Note</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let tx of transactions; let i = index">
+                <td class="sr-no-td">{{ i + 1 }}</td>
+                <td>{{ tx.type }}</td>
+                <td>₹{{ tx.amt }}</td>
+                <td>{{ tx.plan }}</td>
+                <td>
+                  <span class="status-table" [ngClass]="tx.status == 1 ? 'green' : 'red'">
+                    {{ tx.status == 1 ? 'Completed' : 'Cancelled' }}
+                  </span>
+                </td>
+                <td>{{ tx.note }}</td>
+                <td>
+                  {{ tx.created_at?.split('T')[0] }}
+                  {{ tx.created_at?.split('T')[1]?.split('.')[0]?.split(':')[0] }}:
+                  {{ tx.created_at?.split('T')[1]?.split('.')[0]?.split(':')[1] }}
+                </td>
+              </tr>
+              <tr *ngIf="transactions.length === 0">
+                <td colspan="7" class="text-center">No Plan History Found !</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="popup-footer">
+      <button type="button" class="site-btn grey-color" (click)="activeModal.close()">Close</button>
+      <button type="button" class="site-btn primary-color ms-1" (click)="openAssignPlan()">Add Plan</button>
+    </div>
+  </div>
+</main>

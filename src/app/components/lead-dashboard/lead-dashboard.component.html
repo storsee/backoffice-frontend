@@ -1,0 +1,228 @@
+<app-breadcrumb [pageName]="sharedservice.pageName" [icon]="sharedservice.pageDetail?.icon" />
+@if(dashboardData){
+    <div class="page-top-main mb-2">
+        <p class="mb-0 text-muted" style="font-size: 12px;">Lead pipeline overview</p>
+        <button type="button" class="site-btn grey-color" [appBtnLoading]="isReloadLoading" [disabled]="isReloadLoading" (click)="loadDashboard(true)">
+            <span class="site-btn-icon"><i class="fa-solid fa-rotate"></i></span>
+            Refresh
+        </button>
+    </div>
+    <!-- ----------------------------------- amount display start  -->
+    <div class="d-grid p-0 m-0 two-box">
+        <div class="dash-box-main primary">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-users-gear"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{dashboardData?.totalLeads || 0 | number}}</div>
+                <div class="dash-box-name">Total Leads</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-user-plus"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{dashboardData?.todayLeadsCount || 0 | number}}</div>
+                <div class="dash-box-name">Today Leads</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-user-magnifying-glass"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{dashboardData?.weekLeadsCount || 0 | number}}</div>
+                <div class="dash-box-name">This Week Leads</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-calendar-range"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{dashboardData?.monthLeadsCount || 0 | number}}</div>
+                <div class="dash-box-name">This Month Leads</div>
+            </div>
+        </div>
+    </div>
+    <!-- ----------------------------------- amount display end  -->
+     <div class="chart-main">
+        <div class="lead-chart">
+            <apx-chart [series]="statusWiseLeadChart.series" [chart]="statusWiseLeadChart.chart"
+                        [plotOptions]="statusWiseLeadChart.plotOptions" [colors]="statusWiseLeadChart.colors"
+                        [stroke]="statusWiseLeadChart.stroke" [xaxis]="statusWiseLeadChart.xaxis" [grid]="statusWiseLeadChart.grid"></apx-chart>
+        </div>
+     </div>
+    <!-- ----------------------------------- count display start  -->
+    <div class="d-grid p-0 m-0 three-box">
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-calendar-users"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{this.dashboardData?.statusWiseChart[0] || 0 | number}}</div>
+                <div class="dash-box-name">New Leads</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-calendar-range"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{this.dashboardData?.statusWiseChart[1] || 0 | number}}</div>
+                <div class="dash-box-name">Contacted Leads</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-calendar-pen"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{this.dashboardData?.statusWiseChart[2] || 0 | number}}</div>
+                <div class="dash-box-name">Proposal Sent Leads</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-calendar-star"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{this.dashboardData?.statusWiseChart[3] || 0 | number}}</div>
+                <div class="dash-box-name">Won Leads</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-calendar-week"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{this.dashboardData?.statusWiseChart[4] || 0 | number}}</div>
+                <div class="dash-box-name">On Hold Leads</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-calendar-xmark"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{this.dashboardData?.statusWiseChart[5] || 0 | number}}</div>
+                <div class="dash-box-name">Lost Leads</div>
+            </div>
+        </div>
+    </div>
+    <!-- ----------------------------------- count display end  -->
+    <!-- ----------------------------------- count display start  -->
+    <!-- ----------------------------------- amount display end  -->
+     <div class="chart-main">
+        <div class="lead-chart">
+            <apx-chart [series]="sourceWiseLeadChart.series" [chart]="sourceWiseLeadChart.chart"
+                        [plotOptions]="sourceWiseLeadChart.plotOptions" [colors]="sourceWiseLeadChart.colors"
+                        [stroke]="sourceWiseLeadChart.stroke" [xaxis]="sourceWiseLeadChart.xaxis" [grid]="sourceWiseLeadChart.grid"></apx-chart>
+        </div>
+     </div>
+    <!-- ----------------------------------- count display start  -->
+    <div class="d-grid p-0 m-0 four-box">
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-phone"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{this.dashboardData?.statusWiseChart[0] || 0 | number}}</div>
+                <div class="dash-box-name">Cold Calling / Telemarketing</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-handshake"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{this.dashboardData?.statusWiseChart[1] || 0 | number}}</div>
+                <div class="dash-box-name">Direct Reach</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-paper-plane-top"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{this.dashboardData?.statusWiseChart[2] || 0 | number}}</div>
+                <div class="dash-box-name">Email Marketing</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-business-time"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{this.dashboardData?.statusWiseChart[3] || 0 | number}}</div>
+                <div class="dash-box-name">Expo / Seminar</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-brands fa-google"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{this.dashboardData?.statusWiseChart[4] || 0 | number}}</div>
+                <div class="dash-box-name">Google</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-database"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{this.dashboardData?.statusWiseChart[5] || 0 | number}}</div>
+                <div class="dash-box-name">Other Source</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-arrows-rotate"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{this.dashboardData?.statusWiseChart[6] || 0 | number}}</div>
+                <div class="dash-box-name">Customer Reference</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-chart-network"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{this.dashboardData?.statusWiseChart[7] || 0 | number}}</div>
+                <div class="dash-box-name">Social Media</div>
+            </div>
+        </div>
+    </div>
+    <div class="d-grid p-0 m-0 mt-2 two-box">
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-globe-pointer"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{this.dashboardData?.statusWiseChart[8] || 0 | number}}</div>
+                <div class="dash-box-name">Website</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-megaphone"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{this.dashboardData?.statusWiseChart[9] || 0 | number}}</div>
+                <div class="dash-box-name">Digital Marketing</div>
+            </div>
+        </div>
+    </div>
+    <!-- ----------------------------------- count display end  -->
+}@else {
+    <div class="no-data-found-main py-5">
+        <div class="no-data-found-ctx mb-2">Loading lead dashboard...</div>
+        <button type="button" class="site-btn primary-color" [appBtnLoading]="isReloadLoading" [disabled]="isReloadLoading" (click)="loadDashboard(true)">
+            <span class="site-btn-icon"><i class="fa-solid fa-rotate-right"></i></span>
+            Load Dashboard
+        </button>
+    </div>
+}

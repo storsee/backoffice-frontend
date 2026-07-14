@@ -1,0 +1,39 @@
+<app-breadcrumb [pageName]="sharedservice.pageName" [icon]="sharedservice.pageDetail?.icon" />
+@if(isDataLoaded){
+    <div class="page-table-main">
+        <div class="row m-0 p-0">
+            <div class="col-12 mb-2">
+                <div class="form-inp-main">
+                    <label class="form-label">Privacy Policy</label>
+                    <st-editor [(ngModel)]="policiesModel.privacyPolicy" [config]="editorConfig"></st-editor>
+                </div>
+            </div>
+            <div class="col-12 mb-2">
+                <div class="form-inp-main">
+                    <label class="form-label">Terms Condition</label>
+                    <st-editor [(ngModel)]="policiesModel.termscondition" [config]="editorConfig"></st-editor>
+                </div>
+            </div>
+            <div class="col-12 mb-2">
+                <div class="form-inp-main">
+                    <label class="form-label">Payment Policy</label>
+                    <st-editor [(ngModel)]="policiesModel.paymentPolicy" [config]="editorConfig"></st-editor>
+                </div>
+            </div>
+            <div class="col-12 mb-2">
+                <div class="form-inp-main">
+                    <label class="form-label">Cancellation Policy</label>
+                    <st-editor [(ngModel)]="policiesModel.cancellationPolicy" [config]="editorConfig"></st-editor>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="popup-footer">
+                    <button type="button" class="site-btn primary-color ms-1" (click)="updatePolicies()" [appBtnLoading]="isSaving" [disabled]="isSaving">
+                        <span class="site-btn-icon"><i class="fa-solid fa-check"></i></span>
+                        Update
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

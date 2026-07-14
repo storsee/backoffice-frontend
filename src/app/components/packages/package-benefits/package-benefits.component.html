@@ -1,0 +1,27 @@
+<main>
+    <div class="popup-main">
+        <div class="popup-head">
+            <div class="popup-head-ttl">{{ name }} — Benefits</div>
+            <div class="popup-head-btn">
+                <button (click)="activeModal.close()"><i class="fa-solid fa-x"></i></button>
+            </div>
+        </div>
+        <div class="popup-body">
+            @if(data && data.length > 0){
+                <div class="benefits-list">
+                    @for(item of data; track item; let i = $index){
+                        <div class="benefit-row">
+                            <div class="benefit-check"><i class="fa-solid fa-check"></i></div>
+                            <span>{{ item.text }}</span>
+                        </div>
+                    }
+                </div>
+            } @else {
+                <div class="no-benefits">No benefits added for this plan.</div>
+            }
+        </div>
+        <div class="popup-footer">
+            <button type="button" class="site-btn grey-color" (click)="activeModal.close()">Close</button>
+        </div>
+    </div>
+</main>

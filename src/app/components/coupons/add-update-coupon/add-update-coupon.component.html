@@ -1,0 +1,45 @@
+<main>
+    <div class="popup-main">
+        <div class="popup-head">
+            <div class="popup-head-ttl">{{isEdit ? 'Update' : 'Create'}} Coupon</div>
+            <div class="popup-head-btn">
+                <button (click)="activeModal.close()"><i class="fa-solid fa-x"></i></button>
+            </div>
+        </div>
+        <div class="popup-body">
+            <div class="row m-0 p-0">
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Name</label>
+                            <input class="form-control" type="text" placeholder="Enter name" [(ngModel)]="dataReqModel.name" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Discount (%)</label>
+                            <input class="form-control" type="number" OnlyNumber placeholder="Enter Discount (%)" [(ngModel)]="dataReqModel.discount" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Code</label>
+                            <input class="form-control" type="text" placeholder="Enter Coupon Code" [(ngModel)]="dataReqModel.code" />
+                    </div>
+                </div>
+                <div class="col-lg-6 col-12 mb-2">
+                    <div class="form-inp-main">
+                        <label class="form-label">Limit</label>
+                            <input class="form-control" type="number" OnlyNumber placeholder="Enter Limit" [(ngModel)]="dataReqModel.min_limit" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="popup-footer">
+            <button type="button" class="site-btn grey-color" (click)="activeModal.close()" [disabled]="isSaving">Close</button>
+            <button type="button" class="site-btn primary-color ms-1" (click)="validateData()" [appBtnLoading]="isSaving" [disabled]="isSaving">
+                <span class="site-btn-icon"><i class="fa-solid fa-check"></i></span>
+                {{isEdit ? 'Update' : 'Create'}}
+            </button>
+        </div>
+    </div>
+</main>

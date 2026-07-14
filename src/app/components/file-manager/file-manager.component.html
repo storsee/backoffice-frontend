@@ -1,0 +1,69 @@
+<app-breadcrumb [pageName]="sharedservice.pageName" [icon]="sharedservice.pageDetail?.icon" />
+<div class="page-top-main">
+    <div class="current-path">
+        Public_Html/{{currentFolder}}
+    </div>
+    @if(sharedservice.isPageInsert){
+    <div class="page-top-btns-main d-flex justify-content-end">
+        <button class="site-btn dark-color ms-1" (click)="UploadFile()">
+            <div class="site-btn-icon"><i class="fa-solid fa-upload"></i></div>
+            Upload
+        </button>
+    </div>
+    }
+</div>
+<div class="main-data">
+        <div class="main-folders">
+            <div class="d-grid p-0 m-0 folder-box">
+                @if(!checkCurrentFolderIsHome()){
+                    <div class="single-folder-box go-back" (dblclick)="backFolder()">
+                        <div class="single-folder-box-icon">
+                            <i class="fa-solid fa-left-from-bracket"></i>
+                        </div>
+                        <div class="single-folder-box-txt">.. /</div>
+                    </div>
+                }
+                @for(item of foldersList; track item){
+                    <div class="single-folder-box" (dblclick)="openFolder(item.name)">
+                        <div class="single-folder-box-icon">
+                            <i class="fa-solid fa-folder"></i>
+                        </div>
+                        <div class="single-folder-box-txt">{{item.name}}</div>
+                    </div>
+                }
+            </div>
+        </div>
+        <hr>
+    <div class="main-files">
+        @if((filesList.length > 0 || hasEverLoaded)){
+            <div class="d-grid p-0 m-0 file-box list-content-main" [class.is-list-loading]="isListLoading">
+                @if(filesList.length){
+                @for(item of filesList; track item){
+                    <div class="single-file-box">
+                        <div class="single-file-box-image" [style]="'background-image: url('+item.url+');'"></div>
+                        <div class="single-file-box-btns">
+                            <div class="table-btns-main">
+                                <button class="table-single-btn primary" (click)="sharedservice.viewImage(item.url)"><i class="fa-solid fa-eye"></i></button>
+                                <button class="table-single-btn red ms-1" [appBtnLoading]="isBtnLoading('delete', item.id)" (click)="deleteData(item.id)"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                }
+                }@else {
+                    <div class="no-data-found-main">
+                        <div class="no-data-found-img">
+                            <img src="../../../assets/img/no-data.png" alt="">
+                        </div>
+                        <div class="no-data-found-ttl">No Files Found!</div>
+                        <div class="no-data-found-ctx">
+                            You don't currently have any Files. Upload a new File by clicking the button below.
+                        </div>
+                        @if(sharedservice.isPageInsert){
+                        <button class="site-btn primary-color" (click)="UploadFile()"><span class="site-btn-icon"><i class="fa-solid fa-upload"></i></span> Upload</button>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>

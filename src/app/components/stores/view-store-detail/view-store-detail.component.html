@@ -1,0 +1,71 @@
+<main>
+    <div class="popup-main">
+        <div class="popup-head">
+            <div class="popup-head-ttl">{{singleData?.name}} - Store's Details</div>
+            <div class="popup-head-btn">
+                <button (click)="activeModal.close()"><i class="fa-solid fa-x"></i></button>
+            </div>
+        </div>
+        <div class="popup-body">
+            @if(singleData){
+                <div class="row m-0 p-0">
+                    <div class="col-lg-6 col-12 mb-2">
+                        <div class="form-inp-main">
+                            <label class="form-label">Name</label>
+                                <input class="form-control" [disabled]="true" type="text" placeholder="Enter Name" [ngModel]="singleData.name" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-12 mb-2">
+                        <div class="form-inp-main">
+                            <label class="form-label">Email</label>
+                                <input class="form-control" [disabled]="true" type="text" placeholder="Enter Email" [ngModel]="singleData.email" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-12 mb-2">
+                        <div class="form-inp-main">
+                            <label class="form-label">Phone</label>
+                                <input class="form-control" [disabled]="true" type="text" placeholder="Enter Phone" [ngModel]="singleData.phone" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-12 mb-2">
+                        <div class="form-inp-main">
+                            <label class="form-label">Slug</label>
+                                <input class="form-control" [disabled]="true" type="text" placeholder="Enter Slug" [ngModel]="singleData.slug" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-12 mb-2">
+                        <div class="form-inp-main">
+                            <label class="form-label">Template</label>
+                                <input class="form-control" [disabled]="true" type="text" placeholder="Enter Template" [ngModel]="singleData.templateName" />
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-12 mb-2">
+                        <div class="form-inp-main">
+                            <label class="form-label">Business Type</label>
+                                <select class="form-select" [disabled]="true" [(ngModel)]="singleData.type">
+                                    <option [value]="null" [disabled]="true">-- Select Business Type --</option>
+                                    <option [value]="1">B2C (Business to Customer)</option>
+                                    <option [value]="2">B2B (Business to Business)</option>
+                                    <option [value]="3">B2C & B2B</option>
+                                </select>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-2">
+                        <div class="form-inp-main">
+                            <label class="form-label">Template</label>
+                                <select class="form-select" [disabled]="true" [(ngModel)]="singleData.selectedTemplate">
+                                    <option [value]="null" [disabled]="true">-- Select Template --</option>
+                                    @for(item of templateList; track item){
+                                        <option [value]="item.id">{{item.name}}</option>
+                                    }
+                                </select>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="popup-footer">
+            <button type="button" class="site-btn grey-color" (click)="activeModal.close()">Close</button>
+        </div>
+    </div>
+</main>

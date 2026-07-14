@@ -1,0 +1,137 @@
+<app-breadcrumb [pageName]="sharedservice.pageName" [icon]="sharedservice.pageDetail?.icon" />
+<app-page-data-count [totalCount]="totalCount" [filteredCount]="dataList.length" />
+
+<div class="page-top-main">
+    <div class="page-top-search-main d-flex">
+        <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchTxt" (keyup.enter)="filterData()" />
+        <button type="button" class="square-btn site-btn primary-color ms-1" [appBtnLoading]="isSearchLoading" [disabled]="isSearchLoading || isListLoading" (click)="filterData()">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+    </div>
+    @if(sharedservice.isPageInsert){
+        <div class="page-top-btns-main d-flex justify-content-end">
+            <button class="site-btn dark-color ms-1" (click)="addUpdateData(false)">
+                <div class="site-btn-icon"><i class="fa-solid fa-plus"></i></div>
+                Create Plan
+            </button>
+        </div>
+    }
+</div>
+
+@if(dataList.length > 0 && !isTechnicalIssue){
+    <div class="list-content-main" [class.is-list-loading]="isListLoading">
+        <div class="plans-grid">
+            @for(item of dataList | paginate: { itemsPerPage: limit, currentPage: page, totalItems: totalCount }; track item; let i = $index){
+                <div class="plan-card" [style.--plan-color]="item.color || '#1d68f1'">
+                    <div class="plan-card-accent"></div>
+
+                    <div class="plan-badges">
+                        @if(item.isRecommended){
+                            <span class="badge-recommended"><i class="fa-solid fa-thumbs-up me-1"></i>Recommended</span>
+                        }
+                        @if(item.isPopular){
+                            <span class="badge-popular"><i class="fa-solid fa-star me-1"></i>Popular</span>
+                        }
+                        <span class="badge-status" [class.active]="item.isActive" [class.inactive]="!item.isActive">
+                            {{ item.isActive ? 'Active' : 'Inactive' }}
+                        </span>
+                    </div>
+
+                    <div class="plan-slug">{{ item.tierSlug || item.slug }} · {{ item.billingLabel || (item.duration + 'd') }}</div>
+                    <div class="plan-name">{{ item.name }}</div>
+                    @if(item.tagline){
+                        <div class="plan-tagline">{{ item.tagline }}</div>
+                    }
+                    <div class="plan-price">
+                        <span class="price-symbol">₹</span>
+                        <span class="price-amount">{{ item.amount }}</span>
+                        <span class="price-duration">/ {{ item.billingLabel || (item.duration + ' days') }}</span>
+                    </div>
+
+                    <div class="plan-limits">
+                        <div class="limit-item">
+                            <span><i class="fa-solid fa-box"></i></span>
+                            <span>{{ item.productLimit == 0 ? 'Unlimited' : item.productLimit }} Products</span>
+                        </div>
+                        <div class="limit-item">
+                            <span><i class="fa-solid fa-cart-shopping"></i></span>
+                            <span>{{ item.maxOrders == 0 ? 'Unlimited' : item.maxOrders }} orders/mo</span>
+                        </div>
+                        @if(item.trialDays > 0){
+                            <div class="limit-item trial">
+                                <span><i class="fa-solid fa-clock"></i></span>
+                                <span>{{ item.trialDays }} Day Trial</span>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="plan-benefits-preview">
+                        @for(ben of (parseBenefits(item.benefits)); track ben.text){
+                            <div class="benefit-item">
+                                <span><i class="fa-solid fa-check"></i></span>
+                                <span>{{ ben.text }}</span>
+                            </div>
+                        }
+                    </div>
+
+                    @if(sharedservice.isPageUpdate || sharedservice.isPageDelete){
+                        <div class="plan-actions">
+                            <button class="plan-action-btn view" [ngbTooltip]="'View All Benefits'" (click)="viewBenefit(item)">
+                                <i class="fa-solid fa-list"></i>
+                            </button>
+                            @if(sharedservice.isPageUpdate){
+                                <button class="plan-action-btn edit" [ngbTooltip]="'Edit Plan'" (click)="addUpdateData(true, item)">
+                                    <i class="fa-solid fa-pencil"></i>
+                                </button>
+                            }
+                            @if(sharedservice.isPageDelete){
+                                <button class="plan-action-btn delete" [ngbTooltip]="'Delete Plan'" [appBtnLoading]="isBtnLoading('delete', item.id)" (click)="deleteData(item.id)">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="main-pagination mt-2">
+            <div class="data-limit-main">
+                <select class="form-select" [(ngModel)]="limit" [disabled]="isListLoading" (ngModelChange)="onLimitChange()">
+                    <option [value]="10">10</option>
+                    <option [value]="30">30</option>
+                    <option [value]="50">50</option>
+                </select>
+            </div>
+            <div class="pagination-inner">
+                <pagination-controls (pageChange)="onPageChange($event)" />
+            </div>
+        </div>
+    </div>
+} @else if(isTechnicalIssue || hasEverLoaded || !isListLoading) {
+    <div class="no-data-found-main">
+        <div class="no-data-found-img">
+            @if(isTechnicalIssue){
+                <img src="../../../assets/img/technical-issue.png" alt="" />
+            } @else {
+                <img src="../../../assets/img/no-data.png" alt="" />
+            }
+        </div>
+        @if(isTechnicalIssue){
+            <div class="no-data-found-ttl">We Found Some Technical Issues in Our System</div>
+            <div class="no-data-found-ctx">Currently we're working on the Issue please try again later.</div>
+            <button class="site-btn primary-color" routerLink="/dashboard">Go to Dashboard</button>
+        } @else {
+            <div class="no-data-found-ttl">No Plans Found!</div>
+            <div class="no-data-found-ctx">
+                No plans created yet.
+                @if(sharedservice.isPageInsert){ Click below to create your first plan. }
+            </div>
+            @if(sharedservice.isPageInsert){
+                <button class="site-btn primary-color" (click)="addUpdateData(false)">
+                    <span class="site-btn-icon"><i class="fa-solid fa-plus"></i></span> Create Plan
+                </button>
+            }
+        }
+    </div>
+}

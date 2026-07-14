@@ -1,0 +1,87 @@
+<main>
+    <div class="popup-main">
+        <div class="popup-head">
+            <div class="popup-head-ttl">Update Permission</div>
+            <div class="popup-head-btn">
+                <button (click)="activeModal.close()"><i class="fa-solid fa-x"></i></button>
+            </div>
+        </div>
+        <div class="popup-body">
+            <div class="table-responsive card-table">
+                <table class="table text-nowrap">
+                    <thead>
+                        <tr>
+                            <th class="text-start">Page Name</th>
+                            <th>All</th>
+                            <th>View</th>
+                            <th>Insert</th>
+                            <th>Update</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(cat of categoriesList; track cat; let ii = $index){
+                            <tr>
+                                <td colspan="6" class="cat-td">{{cat}}</td>
+                            </tr>
+                            @for(page of pageArr;track page;let i = $index){
+                                @if(page.categoryName == cat){
+                                    <tr>
+                                        <td class="text-start">
+                                            {{page.pagename}}
+                                        </td>
+                                        <td>
+                                            <input class="form-check-input m-0 align-middle" type="checkbox"
+                                                [checked]="page.permissionAction == 15" (change)="allChecked(page,15)" />
+                                        </td>
+                                        <td>
+                                            @if (checkboxShow(15,1)) {
+                                            <input class="form-check-input m-0 align-middle" type="checkbox"
+                                                [checked]="checkboxShow(page.permissionAction,1)"
+                                                (change)="changePermission(page, 1,true)" />
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (checkboxShow(15,2)) {
+                                            <input class="form-check-input m-0 align-middle" type="checkbox"
+                                                [checked]="checkboxShow(page.permissionAction,2)"
+                                                (change)="changePermission(page,2 , false)" />
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (checkboxShow(15,4)) {
+                                            <input class="form-check-input m-0 align-middle" type="checkbox"
+                                                [checked]="checkboxShow(page.permissionAction,4)"
+                                                (change)="changePermission(page,4 , false)" />
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (checkboxShow(15,8)) {
+                                            <input class="form-check-input m-0 align-middle" type="checkbox"
+                                                [checked]="checkboxShow(page.permissionAction,8)"
+                                                (change)="changePermission(page,8 , false)" />
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        }@empty {
+                        <tr>
+                            <td colspan="20">
+                                No Pages Available
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="popup-footer">
+            <button type="button" class="site-btn grey-color" (click)="activeModal.close()" [disabled]="isSaving">Close</button>
+            <button type="button" class="site-btn primary-color ms-1" (click)="submitRolePermissionForm()" [appBtnLoading]="isSaving" [disabled]="isSaving">
+                <span class="site-btn-icon"><i class="fa-solid fa-check"></i></span>
+                Update
+            </button>
+        </div>
+    </div>
+</main>

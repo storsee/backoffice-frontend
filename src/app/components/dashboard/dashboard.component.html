@@ -1,0 +1,160 @@
+<app-breadcrumb [pageName]="sharedservice.pageName" [icon]="sharedservice.pageDetail?.icon" />
+@if(dashboardData){
+    <div class="page-top-main mb-2">
+        <p class="mb-0 text-muted" style="font-size: 12px;">Platform overview at a glance</p>
+        <button type="button" class="site-btn grey-color" [appBtnLoading]="isReloadLoading" [disabled]="isReloadLoading" (click)="loadDashboard(true)">
+            <span class="site-btn-icon"><i class="fa-solid fa-rotate"></i></span>
+            Refresh
+        </button>
+    </div>
+    <!-- ----------------------------------- amount display start  -->
+    <div class="d-grid p-0 mb-2 two-box">
+        <div class="dash-box-main primary">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-money-from-bracket"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">₹ {{dashboardData?.totalTransactionAmt || 0 | number}}</div>
+                <div class="dash-box-name">Transaction Amount</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-money-bill-transfer"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{dashboardData?.totalTransactions || 0 | number}}</div>
+                <div class="dash-box-name">Transactions Count</div>
+            </div>
+        </div>
+    </div>
+    <!-- ----------------------------------- amount display end  -->
+     <div class="chart-main">
+        <div style="height: 300px;">
+            <apx-chart [series]="transactionChart.series" [chart]="transactionChart.chart"
+                [plotOptions]="transactionChart.plotOptions" [colors]="transactionChart.colors"
+                [stroke]="transactionChart.stroke" [xaxis]="transactionChart.xaxis"
+                [grid]="transactionChart.grid"></apx-chart>
+        </div>
+     </div>
+    <!-- ----------------------------------- count display start  -->
+    <div class="d-grid p-0 m-0 three-box">
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-shop"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{dashboardData?.totalStores || 0 | number}}</div>
+                <div class="dash-box-name">Stores</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-users"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{dashboardData?.totalUsers || 0 | number}}</div>
+                <div class="dash-box-name">Administrators</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-images"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{dashboardData?.totalBanners || 0 | number}}</div>
+                <div class="dash-box-name">Banners</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-gifts"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{dashboardData?.totalCoupons || 0 | number}}</div>
+                <div class="dash-box-name">Coupons</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-list"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{dashboardData?.totalFaq || 0 | number}}</div>
+                <div class="dash-box-name">Faqs</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-box"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{dashboardData?.totalPackages || 0 | number}}</div>
+                <div class="dash-box-name">Packages</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-files"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{dashboardData?.totalPages || 0 | number}}</div>
+                <div class="dash-box-name">Pages</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-table-cells"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{dashboardData?.totalPagescategory || 0 | number}}</div>
+                <div class="dash-box-name">Page Categories</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-scroll"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{dashboardData?.totalRoles || 0 | number}}</div>
+                <div class="dash-box-name">Roles</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-table-layout"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{dashboardData?.totalTemplate || 0 | number}}</div>
+                <div class="dash-box-name">Templates</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-table-list"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{dashboardData?.totalThemecategory || 0 | number}}</div>
+                <div class="dash-box-name">Theme Categories</div>
+            </div>
+        </div>
+        <div class="dash-box-main">
+            <div class="dash-box-icon">
+                <i class="fa-regular fa-tickets"></i>
+            </div>
+            <div class="dash-box-ctx">
+                <div class="dash-box-count">{{dashboardData?.totalTicket || 0 | number}}</div>
+                <div class="dash-box-name">Support Tickets</div>
+            </div>
+        </div>
+    </div>
+    <!-- ----------------------------------- count display end  -->
+}@else {
+    <div class="no-data-found-main py-5">
+        <div class="no-data-found-ctx mb-2">Loading dashboard...</div>
+        <button type="button" class="site-btn primary-color" [appBtnLoading]="isReloadLoading" [disabled]="isReloadLoading" (click)="loadDashboard(true)">
+            <span class="site-btn-icon"><i class="fa-solid fa-rotate-right"></i></span>
+            Load Dashboard
+        </button>
+    </div>
+}

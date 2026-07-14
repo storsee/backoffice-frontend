@@ -1,0 +1,94 @@
+<main>
+  <div class="popup-main assign-plan-popup">
+    <div class="popup-head">
+      <div class="popup-head-ttl">Assign / Renew Plan</div>
+      <div class="popup-head-btn">
+        <button (click)="activeModal.close()"><i class="fa-solid fa-x"></i></button>
+      </div>
+    </div>
+    <div class="popup-body">
+      <p class="assign-plan-note">
+        <i class="fa-solid fa-circle-info me-1"></i>
+        Platform subscription only. Templates are purchased separately. Limits are snapshotted on the store.
+      </p>
+
+      <div class="assign-billing-tabs">
+        @for(c of billingCycles; track c.id){
+          <button type="button" [class.active]="selectedBillingCycle === c.id" (click)="selectBillingCycle(c.id)">
+            {{ c.label }}
+          </button>
+        }
+      </div>
+
+      <div class="assign-plan-grid">
+        @for(item of packageList; track item.id){
+          <div class="assign-plan-card"
+            [class.selected]="selectedPackage?.id === item.id"
+            [style.--plan-color]="item.color || '#1d68f1'"
+            (click)="selectPackage(item)">
+            @if(item.isRecommended){
+              <span class="badge-recommended"><i class="fa-solid fa-thumbs-up me-1"></i>Recommended</span>
+            }
+            @if(item.isPopular){
+              <span class="assign-plan-card__badge">Popular</span>
+            }
+            <div class="assign-plan-card__cycle">{{ planDurationLabel(item) }}</div>
+            <div class="assign-plan-card__name">{{ item.name }}</div>
+            <div class="assign-plan-card__price">
+              <span class="amt">₹{{ item.amount }}</span>
+              <span class="dur">/ {{ planDurationLabel(item) }}</span>
+            </div>
+            <div class="assign-plan-card__limits">
+              <span><i class="fa-solid fa-box"></i> {{ limitLabel(item.productLimit) }} products</span>
+              <span><i class="fa-solid fa-cart-shopping"></i> {{ limitLabel(item.maxOrders) }} orders/mo</span>
+              @if(item.trialDays > 0){
+                <span class="trial"><i class="fa-solid fa-gift"></i> {{ item.trialDays }}d trial</span>
+              }
+            </div>
+          </div>
+        } @empty {
+          <div class="text-center text-muted py-4 w-100">No plans found</div>
+        }
+      </div>
+
+      @if(selectedPackage){
+        <div class="assign-plan-options">
+          <label class="assign-plan-options__row">
+            <input type="checkbox" [(ngModel)]="applyPackageLimits" />
+            <span>Apply plan limits to this store (snapshot on assign)</span>
+          </label>
+          @if(applyPackageLimits){
+            <label class="assign-plan-options__row">
+              <input type="checkbox" [(ngModel)]="useCustomLimits" (ngModelChange)="onCustomLimitsToggle()" />
+              <span>Custom limits (e.g. package has 50 products, set store to 20)</span>
+            </label>
+            @if(useCustomLimits){
+              <div class="row m-0">
+                <div class="col-md-6 col-12 mb-2">
+                  <label class="form-label">Product limit</label>
+                  <input class="form-control" type="number" OnlyNumber min="0" [(ngModel)]="productLimit" />
+                </div>
+                <div class="col-md-6 col-12 mb-2">
+                  <label class="form-label">Max orders / month</label>
+                  <input class="form-control" type="number" OnlyNumber min="0" [(ngModel)]="maxOrders" />
+                </div>
+              </div>
+            } @else {
+              <div class="assign-plan-snapshot">
+                Will set: <strong>{{ limitLabel(selectedPackage.productLimit) }}</strong> products,
+                <strong>{{ limitLabel(selectedPackage.maxOrders) }}</strong> orders/month
+              </div>
+            }
+          }
+        </div>
+      }
+    </div>
+    <div class="popup-footer">
+      <button type="button" class="site-btn grey-color" (click)="activeModal.close()" [disabled]="isSaving">Close</button>
+      <button type="button" class="site-btn primary-color ms-1" (click)="assignPlan()" [appBtnLoading]="isSaving" [disabled]="isSaving || !selectedPackage">
+        <span class="site-btn-icon"><i class="fa-solid fa-check"></i></span>
+        Assign plan
+      </button>
+    </div>
+  </div>
+</main>

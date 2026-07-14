@@ -1,0 +1,82 @@
+name: Deploy Super Admin to Hostinger VPS
+
+on:
+  push:
+    branches:
+      - main
+
+# ─────────────────────────────────────────────────────────────────
+#  Required GitHub Secrets (repo Settings → Secrets → Actions):
+#
+#  SSH_HOST           – VPS IP or hostname
+#  SSH_USER           – SSH login user
+#  SSH_PRIVATE_KEY    – Full private key content
+#  SSH_PORT           – SSH port (default 22)
+# ─────────────────────────────────────────────────────────────────
+#
+#  NOTE: API URL is NOT baked into the build.
+#  After deploy, update assets/configuration.json on the server:
+#    { "APIUrl": "https://api.yourdomain.com/api/" }
+# ─────────────────────────────────────────────────────────────────
+
+env:
+  REMOTE_DIR: /var/www/saas/superadmin
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy Super Admin
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ── Build ─────────────────────────────────────────────────
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (production)
+        run: npm run build -- --configuration=production
+
+      # ── Setup SSH ─────────────────────────────────────────────
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p ${{ secrets.SSH_PORT || '22' }} -H "${{ secrets.SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      # ── Deploy static files ───────────────────────────────────
+      - name: Deploy to VPS
+        run: |
+          ssh -p ${{ secrets.SSH_PORT || '22' }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            "mkdir -p ${{ env.REMOTE_DIR }}"
+          rsync -az --delete \
+            -e "ssh -p ${{ secrets.SSH_PORT || '22' }}" \
+            dist/teamcamp/browser/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ env.REMOTE_DIR }}/
+
+      # ── Keep configuration.json intact on server ──────────────
+      - name: Protect server configuration.json
+        run: |
+          ssh -p ${{ secrets.SSH_PORT || '22' }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "
+            if [ ! -f ${{ env.REMOTE_DIR }}/assets/configuration.json ]; then
+              echo '{ \"APIUrl\": \"https://api.yourdomain.com/api/\" }' \
+                > ${{ env.REMOTE_DIR }}/assets/configuration.json
+              echo 'Created default configuration.json — update APIUrl!'
+            fi
+          "
+
+      - name: Reload Nginx
+        run: |
+          ssh -p ${{ secrets.SSH_PORT || '22' }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
+            "nginx -t && systemctl reload nginx"
+
+      - name: Done
+        run: echo "✅ Super Admin deployed to ${{ env.REMOTE_DIR }}"

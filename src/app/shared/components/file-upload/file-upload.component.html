@@ -1,0 +1,169 @@
+<main class="fu-modal">
+
+  <!-- ── Header ── -->
+  <div class="fu-header">
+    <div class="fu-header-left">
+      <div class="fu-header-icon">
+        <i class="fa-light fa-cloud-arrow-up"></i>
+      </div>
+      <div>
+        <div class="fu-header-title">Image Upload</div>
+        <div class="fu-header-sub">
+          <i class="fa-light fa-folder me-1"></i>{{ directoryName || 'No directory set' }}
+        </div>
+      </div>
+    </div>
+    <button class="fu-close-btn" (click)="close()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
+  <!-- ── Stage: Select ── -->
+  @if(stage === 'select'){
+    <div class="fu-body fu-body--select">
+
+      <!-- Left: drop zone -->
+      <div class="fu-select-left">
+        <label
+          class="fu-dropzone"
+          [class.fu-dropzone--hover]="isDragOver"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave()"
+          (drop)="onDrop($event)"
+          for="fu-file-input">
+          <div class="fu-dz-icon-wrap">
+            <i class="fa-light fa-cloud-arrow-up fu-dz-icon"></i>
+          </div>
+          <div class="fu-dz-title">Drag &amp; drop your image here</div>
+          <div class="fu-dz-or"><span>or</span></div>
+          <div class="fu-dz-browse-btn">
+            <i class="fa-light fa-folder-open me-2"></i>Browse Files
+          </div>
+          <div class="fu-dz-sub">PNG · JPG · WEBP · GIF</div>
+          <input id="fu-file-input" type="file" accept="image/*" (change)="onFileInputChange($event)" />
+        </label>
+      </div>
+
+      <!-- Right: info panel -->
+      <div class="fu-select-right">
+        <div class="fu-info-title">
+          <i class="fa-light fa-circle-info me-2"></i>How it works
+        </div>
+        <div class="fu-info-steps">
+          <div class="fu-info-step">
+            <div class="fu-info-step-num">1</div>
+            <div class="fu-info-step-txt">
+              <strong>Select</strong> an image from your device or drag it into the upload area
+            </div>
+          </div>
+          <div class="fu-info-step">
+            <div class="fu-info-step-num">2</div>
+            <div class="fu-info-step-txt">
+              <strong>Crop</strong> the image by dragging the handles to select the area you want
+            </div>
+          </div>
+          <div class="fu-info-step">
+            <div class="fu-info-step-num">3</div>
+            <div class="fu-info-step-txt">
+              <strong>Upload</strong> the cropped image and copy the URL to use anywhere
+            </div>
+          </div>
+        </div>
+        <div class="fu-info-formats">
+          <div class="fu-info-formats-ttl">Supported formats</div>
+          <div class="fu-info-formats-list">
+            <span class="fu-fmt-tag">PNG</span>
+            <span class="fu-fmt-tag">JPG</span>
+            <span class="fu-fmt-tag">WEBP</span>
+            <span class="fu-fmt-tag">GIF</span>
+          </div>
+        </div>
+        <div class="fu-info-tip">
+          <i class="fa-light fa-lightbulb me-2"></i>
+          Tip: After selecting, you can crop to any size before uploading.
+        </div>
+        @if(dimentions){
+          <div class="fu-info-tip fu-info-tip--guide">
+            <i class="fa-light fa-ruler-combined me-2"></i>
+            <span>
+              <strong>Recommended size: {{ dimentions.width }} × {{ dimentions.height }} px</strong><br/>
+              Any size is accepted — square images look best here.
+            </span>
+          </div>
+        }
+      </div>
+
+    </div>
+  }
+
+  <!-- ── Stage: Crop ── -->
+  @if(stage === 'crop'){
+    <div class="fu-body fu-body--crop">
+      <div class="fu-crop-topbar">
+        <div class="fu-crop-hint">
+          <i class="fa-light fa-crop-simple"></i>
+          Drag corners or edges to adjust the crop area · Move inside the box to reposition
+        </div>
+        <div class="fu-crop-size-badge">
+          {{ crop.w | number:'1.0-0' }} × {{ crop.h | number:'1.0-0' }} px
+        </div>
+      </div>
+      <div class="fu-canvas-wrap">
+        <canvas #cropCanvas class="fu-canvas"></canvas>
+      </div>
+      <div class="fu-crop-footer">
+        <button class="fu-btn fu-btn--ghost" (click)="resetToSelect()" [disabled]="isUploading">
+          <i class="fa-light fa-arrow-left"></i> Change Image
+        </button>
+        <div class="fu-crop-footer-right">
+          <button class="fu-btn fu-btn--primary" (click)="applyCrop()" [disabled]="isUploading">
+            @if(isUploading){
+              <span class="fu-btn-spinner"></span>
+              <span>Uploading {{ uploadProgress }}%</span>
+            } @else {
+              <span><i class="fa-light fa-crop-simple"></i></span>
+              <span>Crop &amp; Upload</span>
+            }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ── Stage: Done ── -->
+  @if(stage === 'done'){
+    <div class="fu-body fu-body--done">
+      <div class="fu-done-left">
+        <div class="fu-done-preview-wrap">
+          <img [src]="fileUrl" alt="Uploaded image" class="fu-done-preview" />
+          <div class="fu-done-badge">
+            <i class="fa-solid fa-check"></i> Uploaded
+          </div>
+        </div>
+      </div>
+      <div class="fu-done-right">
+        <div class="fu-done-circle">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        <div class="fu-done-title">Upload Complete!</div>
+        <div class="fu-done-desc">Your image has been uploaded successfully. Copy the URL below or use it directly.</div>
+        <div class="fu-done-url-label">Image URL</div>
+        <div class="fu-done-url-row">
+          <input class="fu-url-input" type="text" [value]="fileUrl" readonly />
+          <button class="fu-btn fu-btn--icon" (click)="sharedservice.copyText(fileUrl)" [ngbTooltip]="'Copy URL'">
+            <i class="fa-light fa-copy"></i>
+          </button>
+        </div>
+        <div class="fu-done-actions">
+          <button class="fu-btn fu-btn--ghost" (click)="resetToSelect()">
+            <i class="fa-light fa-plus"></i> Upload Another
+          </button>
+          <button class="fu-btn fu-btn--primary" (click)="close()">
+            <i class="fa-light fa-check"></i> Use This Image
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+</main>

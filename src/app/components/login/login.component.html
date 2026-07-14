@@ -1,0 +1,96 @@
+<div class="auth-page">
+  <aside class="auth-visual">
+    <div class="auth-visual__overlay"></div>
+    <div class="auth-visual__overlay-glow"></div>
+    <div class="auth-visual__brand">
+      <img [src]="sharedservice.getSiteLogoDark()" alt="Logo" />
+    </div>
+    <div class="auth-visual__copy">
+      <h2>Command your entire commerce platform</h2>
+      <p>Stores, plans, themes, payments, and security — full platform control from one professional admin console.</p>
+      <div class="auth-visual__pills">
+        <span class="auth-pill">
+          <span class="auth-pill-icon"><span><i class="fa-solid fa-store"></i></span></span>
+          Store management
+        </span>
+        <span class="auth-pill">
+          <span class="auth-pill-icon"><span><i class="fa-solid fa-shield-halved"></i></span></span>
+          RBAC &amp; security
+        </span>
+        <span class="auth-pill">
+          <span class="auth-pill-icon"><span><i class="fa-solid fa-chart-line"></i></span></span>
+          Analytics
+        </span>
+      </div>
+      <div class="auth-visual__trust">
+        <div class="auth-trust-icon"><i class="fa-solid fa-lock"></i></div>
+        <p><strong>Authorized access only</strong> — platform administrator credentials required</p>
+      </div>
+    </div>
+  </aside>
+
+  <main class="auth-panel">
+    <div class="auth-panel__top"></div>
+    <div class="auth-panel__body">
+      <div class="auth-admin-badge">
+        <i class="fa-solid fa-user-shield"></i>
+        Platform Admin
+      </div>
+
+      <div class="auth-heading">
+        <h1>Welcome back</h1>
+        <p>Sign in to manage stores, plans, and platform settings.</p>
+      </div>
+
+      <div class="auth-field">
+        <label>Email</label>
+        <div class="auth-input-wrap">
+          <span class="auth-input-icon"><span><i class="fa-regular fa-envelope"></i></span></span>
+          <input
+            type="email"
+            placeholder="admin@company.com"
+            [(ngModel)]="loginModel.email"
+            (keypress)="getEnterEvent($event)"
+            autocomplete="email" />
+        </div>
+      </div>
+
+      <div class="auth-field">
+        <label>Password</label>
+        <div class="auth-input-wrap auth-input-wrap--has-eye">
+          <span class="auth-input-icon"><span><i class="fa-regular fa-lock"></i></span></span>
+          <input
+            [type]="passVisible ? 'text' : 'password'"
+            placeholder="••••••••"
+            [(ngModel)]="loginModel.password"
+            (keypress)="getEnterEvent($event)"
+            autocomplete="current-password" />
+          <button type="button" class="auth-eye" (click)="passVisible = !passVisible" aria-label="Toggle password">
+            <span class="auth-eye-icon">
+              @if(passVisible){
+                <span><i class="fa-solid fa-eye-slash"></i></span>
+              } @else {
+                <span><i class="fa-solid fa-eye"></i></span>
+              }
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <div class="auth-row">
+        <span></span>
+        <span class="link">Forgot password?</span>
+      </div>
+
+      <button type="button" class="auth-submit" (click)="login()" [appBtnLoading]="isSaving" [disabled]="isSaving">
+        <i class="fa-solid fa-right-to-bracket"></i>
+        Sign in to admin
+      </button>
+
+      <div class="auth-secure-note">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>This portal is for platform administrators only. Store owners should use the merchant dashboard.</span>
+      </div>
+    </div>
+  </main>
+</div>

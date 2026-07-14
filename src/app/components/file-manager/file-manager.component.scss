@@ -1,0 +1,170 @@
+.folder-box{
+    display: grid !important;
+    grid-template-columns: repeat(4,auto);
+    gap: 10px;
+}
+@media(max-width : 992px){
+    .folder-box{
+        grid-template-columns: repeat(3,auto) !important;
+    }
+}
+@media(max-width : 767px){
+    .folder-box{
+        grid-template-columns: repeat(1,auto) !important;
+    }
+}
+.file-box{
+    display: grid !important;
+    grid-template-columns: repeat(6,auto);
+    gap: 10px;
+}
+@media(max-width : 992px){
+    .file-box{
+        grid-template-columns: repeat(4,auto) !important;
+    }
+}
+@media(max-width : 767px){
+    .file-box{
+        grid-template-columns: repeat(3,auto) !important;
+    }
+}
+@media(max-width : 576px){
+    .file-box{
+        grid-template-columns: repeat(2,auto) !important;
+    }
+}
+.single-folder-box{
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: var(--sidebar-bg);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: start;
+    
+    .single-folder-box-icon{
+        font-size: 16px;
+        margin-right: 10px;
+    }
+    .single-folder-box-txt{
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    &.go-back{
+        background-color: var(--blue-bg);
+        color: var(--blue-color);
+    }
+}
+.single-skel-folder-box{
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: var(--sidebar-bg);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    justify-content: start;
+    position: relative;
+    overflow: hidden;
+
+    &:after{
+        position: absolute;
+        content: "";
+        top: 0;
+        right: -30px;
+        height: 100%;
+        width: 20px;
+        background-color: #fff;
+        animation: skeletonanime 2s infinite;
+        filter: blur(10px);
+    }
+    
+    
+    .single-skel-folder-box-icon{
+        font-size: 16px;
+        margin-right: 10px;
+        opacity: 0.05;
+        color: var(--black);
+    }
+    .single-skel-folder-box-txt{
+        background-color: var(--black);
+        height: 14px;
+        width: 50%;
+        opacity: 0.05;
+    }
+
+    &.go-back{
+        background-color: var(--blue-bg);
+        color: var(--blue-color);
+    }
+}
+@keyframes skeletonanime {
+    0%{
+        right: -30px;
+    }
+    100%{
+        right: 110%;
+    }
+}
+.single-file-box{
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 5px;
+    border-radius: 10px;
+    background-color: var(--white);
+    cursor: pointer;
+    position: relative;
+    
+    .single-file-box-image{
+        padding: 7px;
+        background-position: center center;
+        background-size: 100% 100%;
+        border-radius: 10px;
+        height: 150px;
+        text-align: center;
+        width: 100%;
+        position: relative;
+        transition: all 0.3s;
+        
+        &:hover{
+            background-size: 120% 120%;
+        }
+
+        &:after{
+            position: absolute;
+            content: '';
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            background-color: #000;
+            opacity: 0.7;
+        }
+    }
+    .single-file-box-btns{
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+hr{
+    margin: 0 !important;
+    margin-top: 7px !important;
+    margin-bottom: 7px !important;
+    opacity: 1 !important;
+    border-color: var(--dark-border) !important;
+}
+.current-path{
+    font-size: 13px;
+    color: var(--normal-font);
+}
+
+.list-content-main.is-list-loading {
+  opacity: 0.72;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
