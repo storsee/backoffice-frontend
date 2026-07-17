@@ -18,7 +18,6 @@ import { StoreUsersComponent } from "../../components/store-users/store-users.co
 import { PoliciesComponent } from "../../components/policies/policies.component";
 import { TransactionsComponent } from "../../components/transactions/transactions.component";
 import { PaymentSettingComponent } from "../../components/payment-setting/payment-setting.component";
-import { FileManagerComponent } from "../../components/file-manager/file-manager.component";
 import { LeadDashboardComponent } from "../../components/lead-dashboard/lead-dashboard.component";
 import { LeadsComponent } from "../../components/leads/leads.component";
 export const routing: Routes = [
@@ -86,9 +85,6 @@ export const routing: Routes = [
     },{
         path: 'payment-setting',
         component: PaymentSettingComponent
-    },{
-        path: 'file-manager',
-        component: FileManagerComponent
     },{
         path: 'lead-dashboard',
         component: LeadDashboardComponent

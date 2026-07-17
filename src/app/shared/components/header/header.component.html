@@ -1,13 +1,135 @@
-<header>
-    <div class="header-logo">
-        @if(sharedservice.deviceWidth < 992){
-            <div class="header-menu-icon" (click)="sharedservice.isSidebarOpen = !sharedservice.isSidebarOpen"><i class="fa-light fa-grid-2"></i></div>
-        }
-        <img routerLink="/dashboard" [src]="sharedservice.getSiteLogoDark()" alt="logo-white" />
-    </div>
-    <div class="header-right">
-        <div class="header-user-main">
-            <div class="header-user-icon"><i class="fa-light fa-user"></i></div>
+<header class="app-header">
+  <div class="header-left">
+    @if(sharedservice.deviceWidth < 992){
+      <button type="button" class="header-icon-btn header-menu-btn" (click)="sharedservice.isSidebarOpen = !sharedservice.isSidebarOpen">
+        <span class="header-icon-inner"><i class="fa-solid fa-bars"></i></span>
+      </button>
+    }
+    <a class="header-logo-link" routerLink="/dashboard">
+      <img [src]="sharedservice.getSiteLogoDark()" alt="logo" />
+    </a>
+  </div>
+
+  <!-- Desktop search -->
+  <div class="header-center">
+    <div class="header-search-wrap">
+      <label class="header-search">
+        <span class="header-search-icon">
+          <span class="header-search-icon-inner"><i class="fa-solid fa-magnifying-glass"></i></span>
+        </span>
+        <input
+          #searchInputDesktop
+          type="text"
+          class="header-search-input"
+          placeholder="Search"
+          [(ngModel)]="searchTxt"
+          (input)="onSearchInput()"
+          (focus)="onSearchFocus()"
+        />
+        <span class="header-search-kbd">
+          <span class="header-kbd-key">CTRL</span>
+          <span class="header-kbd-key">K</span>
+        </span>
+      </label>
+
+      @if(showSearchResults){
+        <div class="header-search-dropdown">
+          @for(item of searchResults; track item.url){
+            <button type="button" class="header-search-result" (click)="navigateSearch(item)">
+              <span class="header-search-result-label">{{ item.label }}</span>
+              <span class="header-search-result-group">{{ item.group }}</span>
+            </button>
+          }
         </div>
+      }
     </div>
+  </div>
+
+  <div class="header-right">
+    @if(sharedservice.deviceWidth < 992){
+      <button type="button" class="header-icon-btn" (click)="toggleMobileSearch()">
+        <span class="header-icon-inner"><i class="fa-solid fa-magnifying-glass"></i></span>
+      </button>
+    }
+
+    <!-- Admin user dropdown -->
+    <div class="header-store-wrap" (mouseenter)="isUserDropdownOpen = true" (mouseleave)="isUserDropdownOpen = false">
+      <button type="button" class="header-store-btn" [class.is-open]="isUserDropdownOpen">
+        <span class="header-store-badge">{{ adminInitials }}</span>
+        <span class="header-store-name">{{ sharedservice.userData?.name || 'Admin' }}</span>
+        <span class="header-store-chevron"><i class="fa-solid fa-chevron-down"></i></span>
+      </button>
+
+      <div class="header-store-dropdown" [class.is-visible]="isUserDropdownOpen">
+        <!-- Admin identity row -->
+        <div class="hsd-store-row">
+          <span class="hsd-badge">{{ adminInitials }}</span>
+          <div class="hsd-store-info">
+            <span class="hsd-store-name">{{ sharedservice.userData?.name || 'Admin' }}</span>
+            <span class="hsd-store-slug">{{ sharedservice.userData?.email }}</span>
+          </div>
+        </div>
+
+        <div class="hsd-divider"></div>
+
+        <div class="hsd-links">
+          <button type="button" class="hsd-link" (click)="goTo('/site-configuration')">
+            <i class="fa-solid fa-gear"></i>
+            <span>Site Config</span>
+          </button>
+          <button type="button" class="hsd-link" (click)="goTo('/users')">
+            <i class="fa-solid fa-users"></i>
+            <span>Users</span>
+          </button>
+          <button type="button" class="hsd-link" (click)="goTo('/roles')">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Roles</span>
+          </button>
+        </div>
+
+        <div class="hsd-divider"></div>
+
+        <button type="button" class="hsd-link hsd-link--danger" (click)="logout()">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span>Log out</span>
+        </button>
+      </div>
+    </div>
+  </div>
 </header>
+
+<!-- Mobile search panel -->
+@if(isMobileSearchOpen){
+  <div class="header-mobile-search-panel">
+    <div class="header-search-wrap">
+      <label class="header-search header-search--mobile">
+        <span class="header-search-icon">
+          <span class="header-search-icon-inner"><i class="fa-solid fa-magnifying-glass"></i></span>
+        </span>
+        <input
+          #searchInputMobile
+          type="text"
+          class="header-search-input"
+          placeholder="Search"
+          [(ngModel)]="searchTxt"
+          (input)="onSearchInput()"
+          (focus)="onSearchFocus()"
+        />
+        <button type="button" class="header-mobile-close" (click)="closeSearch()">
+          <span class="header-icon-inner"><i class="fa-solid fa-xmark"></i></span>
+        </button>
+      </label>
+
+      @if(showSearchResults){
+        <div class="header-search-dropdown header-search-dropdown--mobile">
+          @for(item of searchResults; track item.url){
+            <button type="button" class="header-search-result" (click)="navigateSearch(item)">
+              <span class="header-search-result-label">{{ item.label }}</span>
+              <span class="header-search-result-group">{{ item.group }}</span>
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+}
